@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Virtual - Universidad</title>
+    <meta name="description" content="Plataforma LMS para gestión académica universitaria">
+    <meta name="keywords" content="LMS, educación, universidad, cursos online">
+    <meta property="og:title" content="Campus Virtual - Universidad">
+    <meta property="og:description" content="Plataforma LMS para gestión académica universitaria">
+    <meta name="twitter:title" content="Campus Virtual - Universidad">
+    <meta name="twitter:description" content="Plataforma LMS para gestión académica universitaria">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="styles/main.css" rel="stylesheet">
+    <link href="styles/chatbot.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">¡Añadido al carrito!</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                El curso ha sido añadido a tu carrito de compras.
+            </div>
+        </div>
+    </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="./img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html"><i class="fas fa-home me-1"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./html/cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./html/blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./html/contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
+                    </li>
+                    <!-- Botón Mis Cursos (solo para estudiantes) -->
+                    <li class="nav-item" id="misCursosContainer" style="display: none;">
+                        <a class="nav-link mis-cursos-btn" href="./html/courses.html">
+                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" aria-label="Notificaciones">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    </li>
+
+                    <!-- Dropdown del Carrito -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span id="cartCount"
+                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
+                            <li>
+                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider my-1">
+                            </li>
+                            <li>
+                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
+                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
+                                </div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider my-1">
+                            </li>
+                            <li class="px-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>Subtotal:</strong>
+                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
+                                </div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider my-1">
+                            </li>
+                            <li class="px-2 mb-1">
+                                <a href="./html/checkout.html" class="btn btn-primary w-100 py-2">
+                                    Ir a pagar
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Dropdown del Usuario -->
+                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
+                            <span id="userName">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <div class="dropdown-header">
+                                    <div class="d-flex align-items-center">
+                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
+                                        <div>
+                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
+                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="./html/profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="./html/settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
+                            <li><a class="dropdown-item" href="./html/courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Botón de Login (cuando no está autenticado) -->
+                    <li class="nav-item" id="loginButtonContainer">
+                        <a class="nav-link" href="./html/login.html">
+                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <video autoplay muted loop class="hero-video">
+            <source src="./video/BackgroundTechFinal.mp4" type="video/mp4">
+            Tu navegador no soporta videos HTML5.
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <img src="./img/LuminaLogoNoTextBlanco.webp" alt="Logo Campus Virtual" class="hero-logo">
+            <h1 class="hero-title">Lumina Learning</h1>
+            <p class="hero-subtitle">Iluminando el futuro del aprendizaje en línea.</p>
+            <div class="hero-cta">
+                <a href="./html/cursos-venta.html" class="btn btn-primary btn-lg hero-btn">
+                    <i class="fas fa-book me-2"></i>Explorar Cursos
+                </a>
+                <a href="./html/contact.html" class="btn btn-outline-light btn-lg hero-btn">
+                    <i class="fas fa-envelope me-2"></i>Contáctanos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Sección Quiénes Somos -->
+            <h2 class="section-title text-center">¿Quiénes somos?</h2>
+            <h5 class="index-desc">Somos una plataforma educativa digital comprometida con hacer el aprendizaje
+                accesible, práctico y transformador. Nacimos para romper las barreras de la educación tradicional,
+                ofreciendo cursos en línea de alta calidad a precios asequibles, diseñados para estudiantes,
+                profesionales y lifelong learners que buscan crecer sin límites.</h5>
+
+            <!-- Misión, Visión y Valores -->
+            <section class="mission-section mb-5">
+                <div class="info-sections">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-bullseye fa-3x text-primary mb-3"></i>
+                                    <h5 class="card-title">Nuestra Misión</h5>
+                                    <p class="card-text">Formar profesionales íntegros y competentes, comprometidos con
+                                        el desarrollo sostenible.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-eye fa-3x text-success mb-3"></i>
+                                    <h5 class="card-title">Nuestra Visión</h5>
+                                    <p class="card-text">Ser una institución educativa líder en innovación académica y
+                                        tecnológica.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-heart fa-3x text-danger mb-3"></i>
+                                    <h5 class="card-title">Nuestros Valores</h5>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success me-2"></i>Excelencia Académica</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Integridad</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Responsabilidad Social</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cómo funciona la plataforma -->
+            <section class="how-it-works-section mb-5">
+                <div class="section-header text-center mb-5">
+                    <h2 class="section-title">¿Cómo funciona nuestra plataforma?</h2>
+                    <p class="index-desc">Descubre el proceso simple y efectivo para comenzar tu aprendizaje</p>
+                </div>
+                <div class="row steps-container">
+                    <!-- Paso 1 -->
+                    <div class="col-md-6 col-lg-3 step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">
+                            <i class="fas fa-search fa-2x" style="color: #1e3a8a; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(30,58,138,0.4));"></i>
+                        </div>
+                        <h5 class="step-title">Explora nuestros cursos</h5>
+                        <p class="step-description">Encuentra el curso
+                            perfecto para tus necesidades de aprendizaje.</p>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div class="col-md-6 col-lg-3 step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">
+                            <i class="fas fa-shopping-cart fa-2x" style="color: #3b82f6; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(59,130,246,0.4));"></i>
+                        </div>
+                        <h5 class="step-title">Realiza tu compra</h5>
+                        <p class="step-description">Elige el curso que deseas y completa el proceso de
+                            compra de forma segura.</p>
+                    </div>
+
+                    <!-- Paso 3 -->
+                    <div class="col-md-6 col-lg-3 step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">
+                            <i class="fas fa-book-open fa-2x" style="color: #60a5fa; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(96,165,250,0.4));"></i>
+                        </div>
+                        <h5 class="step-title">Completa el curso</h5>
+                        <p class="step-description">Accede al contenido, realiza las actividades y
+                            avanza a tu propio ritmo.</p>
+                    </div>
+
+                    <!-- Paso 4 -->
+                    <div class="col-md-6 col-lg-3 step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-icon">
+                            <i class="fas fa-certificate fa-2x" style="color: #93c5fd; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(147,197,253,0.4));"></i>
+                        </div>
+                        <h5 class="step-title">Obtén tu certificado</h5>
+                        <p class="step-description">Al finalizar, recibe tu certificado digital que
+                            acredita tu aprendizaje.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cursos Destacados -->
+            <section class="featured-courses">
+                <div class="section-header">
+                    <h2 class="section-title">Cursos Destacados</h2>
+                    <h5 class="index-desc">Descubre nuestros programas más populares y comienza tu viaje de
+                        aprendizaje hoy mismo</h5>
+                </div>
+
+                <div class="row">
+                    <!-- Curso 1 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="course-card" data-id="1">
+                            <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                                class="course-img" alt="Marketing Digital">
+                            <div class="course-body">
+                                <h3 class="course-title">Mundo Spiral</h3>
+                                <p class="course-subtitle">Marketing Digital Avanzado</p>
+                                <p class="course-text">Domina las últimas estrategias de marketing digital y posiciona
+                                    tu marca en el mundo digital.</p>
+                                <div class="course-meta">
+                                    <span class="course-price">$499</span>
+                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Curso 2 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="course-card" data-id="2">
+                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                                class="course-img" alt="Desarrollo Web">
+                            <div class="course-body">
+                                <h3 class="course-title">Desarrollo Web Full Stack</h3>
+                                <p class="course-subtitle">De principiante a experto</p>
+                                <p class="course-text">Aprende a crear aplicaciones web completas con las tecnologías
+                                    más demandadas del mercado.</p>
+                                <div class="course-meta">
+                                    <span class="course-price">$599</span>
+                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Curso 3 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="course-card" data-id="3">
+                            <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                                class="course-img" alt="Inversiones">
+                            <div class="course-body">
+                                <h3 class="course-title">Inversiones Financieras</h3>
+                                <p class="course-subtitle">Gestión de portafolios</p>
+                                <p class="course-text">Aprende a invertir de manera inteligente y haz crecer tu capital
+                                    con estrategias comprobadas.</p>
+                                <div class="course-meta">
+                                    <span class="course-price">$399</span>
+                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Curso 4 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="course-card" data-id="4">
+                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                                class="course-img" alt="Meta Finance">
+                            <div class="course-body">
+                                <h3 class="course-title">Meta-finance®</h3>
+                                <p class="course-subtitle">Estrategias avanzadas</p>
+                                <p class="course-text">Descubre el revolucionario método Meta-finance® para maximizar
+                                    tus ganancias financieras.</p>
+                                <div class="course-meta">
+                                    <span class="course-price">$699</span>
+                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="view-all">
+                    <a href="./html/cursos-venta.html" class="btn mis-cursos-btn">
+                        Ver todos los cursos <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <img src="./img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
+                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
+                    <div class="mt-2">
+                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-3">
+                    <h6>Enlaces</h6>
+                    <a href="index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
+                    <a href="./html/cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
+                    <a href="./html/blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
+                    <a href="./html/contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-3">
+                    <h6>Mi cuenta</h6>
+                    <a href="student-courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
+                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
+                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
+                    <a href="#" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
+                </div>
+
+                <div class="col-lg-4 mb-3">
+                    <h6>Contacto</h6>
+                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> info@lumina.edu</p>
+                    <a href="./html/contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth0-config.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script src="js/logout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Actualizar año en el footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // Configurar carrito de compras
+            window.cart = {
+                items: [],
+                total: 0,
+
+                addItem: function (course) {
+                    const existingItem = this.items.find(item => item.id === course.id);
+
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        this.items.push({
+                            id: course.id,
+                            title: course.title,
+                            price: course.price,
+                            image: course.image,
+                            quantity: 1
+                        });
+                    }
+
+                    this.calculateTotal();
+                    this.updateUI();
+                    this.saveToLocalStorage();
+
+                    // Mostrar notificación
+                    const toast = new bootstrap.Toast(document.getElementById('addedToCartToast'));
+                    toast.show();
+                },
+
+                removeItem: function (id) {
+                    // Convertir id a string para comparación consistente
+                    const itemId = String(id);
+                    this.items = this.items.filter(item => String(item.id) !== itemId);
+                    this.calculateTotal();
+                    this.updateUI();
+                    this.saveToLocalStorage();
+                },
+
+                calculateTotal: function () {
+                    this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                },
+
+                updateUI: function () {
+                    // Actualizar contador
+                    const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
+                    document.getElementById('cartCount').textContent = totalItems;
+
+                    // Actualizar lista de items
+                    const cartItemsContainer = document.getElementById('cartItems');
+                    cartItemsContainer.innerHTML = '';
+
+                    if (this.items.length === 0) {
+                        cartItemsContainer.innerHTML = '<p class="text-muted text-center py-2">Tu carrito está vacío</p>';
+                    } else {
+                        this.items.forEach(item => {
+                            const itemElement = document.createElement('div');
+                            itemElement.className = 'cart-item d-flex justify-content-between align-items-center py-2';
+                            itemElement.innerHTML = `
+                                <img src="${item.image}" class="cart-item-img rounded" width="40" height="40" alt="${item.title}">
+                                <div class="flex-grow-1 mx-3">
+                                    <div class="cart-item-title">${item.title}</div>
+                                    <small class="text-muted">${item.quantity} x $${item.price.toFixed(2)}</small>
+                                </div>
+                                <span class="cart-item-price fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
+                                <button class="btn btn-sm btn-outline-danger remove-item ms-2" data-id="${item.id}" aria-label="Eliminar">
+                                    &times;
+                                </button>
+                            `;
+                            cartItemsContainer.appendChild(itemElement);
+                        });
+                    }
+
+                    // Actualizar subtotal
+                    document.getElementById('cartSubtotal').textContent = `$${this.total.toFixed(2)}`;
+                },
+
+                saveToLocalStorage: function () {
+                    localStorage.setItem('shoppingCart', JSON.stringify(this.items));
+                },
+
+                loadFromLocalStorage: function () {
+                    const savedCart = localStorage.getItem('shoppingCart');
+                    if (savedCart) {
+                        this.items = JSON.parse(savedCart);
+                        this.calculateTotal();
+                        this.updateUI();
+                    }
+                },
+
+                init: function () {
+                    this.loadFromLocalStorage();
+
+                    // Delegación de eventos para los botones de eliminar
+                    document.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('remove-item')) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const itemId = e.target.getAttribute('data-id');
+                            if (itemId) {
+                                this.removeItem(itemId);
+                            }
+                        }
+                    });
+                }
+            };
+
+            // Inicializar el carrito
+            cart.init();
+
+            // Manejar clic en botones "Comprar"
+            document.querySelectorAll('.course-btn').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const courseCard = this.closest('.course-card');
+                    const course = {
+                        id: courseCard.getAttribute('data-id'),
+                        title: courseCard.querySelector('.course-title').textContent,
+                        price: parseFloat(courseCard.querySelector('.course-price').textContent.replace('$', '')),
+                        image: courseCard.querySelector('.course-img').src
+                    };
+
+                    cart.addItem(course);
+
+                    // Mostrar el dropdown del carrito
+                    const cartDropdown = new bootstrap.Dropdown(document.getElementById('cartDropdown'));
+                    cartDropdown.show();
+
+                    // Animación de confirmación
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check me-2"></i>Añadido';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-success');
+
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-primary');
+                    }, 2000);
+                });
+            });
+
+            // Efecto de navbar al hacer scroll
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                window.addEventListener('scroll', function () {
+                    if (window.scrollY > 50) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            // Función global para logout
+            window.handleLogout = async function() {
+                try {
+                    await Auth0Service.logout();
+                } catch (error) {
+                    console.error('Error en logout:', error);
+                    // Redirigir de todas formas
+                    window.location.href = './html/login.html';
+                }
+            };
+
+            // Verificar autenticación y actualizar navbar
+            async function checkAuthAndUpdateNavbar() {
+                try {
+                    await Auth0Service.initialize();
+                    const isAuthenticated = await Auth0Service.isAuthenticated();
+                    
+                    if (isAuthenticated) {
+                        const user = await Auth0Service.getUser();
+                        updateUserNavbar(user);
+                    } else {
+                        showLoginButton();
+                    }
+                } catch (error) {
+                    console.error('Error verificando autenticación:', error);
+                    showLoginButton();
+                }
+            }
+
+            function updateUserNavbar(user) {
+                // Ocultar botón de login
+                document.getElementById('loginButtonContainer').style.display = 'none';
+                
+                // Mostrar dropdown del usuario
+                const userContainer = document.getElementById('userDropdownContainer');
+                userContainer.style.display = 'block';
+                
+                // Actualizar información del usuario
+                const userName = user.name || user.email.split('@')[0];
+                const userEmail = user.email;
+                
+                // Determinar el rol del usuario
+                let userRole = 'student';
+                if (userEmail === 'admin@gmail.com') {
+                    userRole = 'admin';
+                } else if (userEmail === 'profesor@gmail.com') {
+                    userRole = 'teacher';
+                } else if (userEmail === 'estudiante@gmail.com') {
+                    userRole = 'student';
+                } else {
+                    userRole = user.role || 'student';
+                }
+                
+                // Avatar basado en el rol usando íconos
+                let avatarIcon = 'fa-user-circle';
+                if (userRole === 'admin') {
+                    avatarIcon = 'fa-user-shield';
+                } else if (userRole === 'teacher') {
+                    avatarIcon = 'fa-chalkboard-teacher';
+                } else {
+                    avatarIcon = 'fa-user-graduate';
+                }
+                
+                // Actualizar elementos del navbar
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('userNameLarge').textContent = userName;
+                document.getElementById('userEmail').textContent = userEmail;
+                document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
+                document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
+                
+                // Mostrar/ocultar botón "Mis Cursos" según el rol
+                const misCursosContainer = document.getElementById('misCursosContainer');
+                if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
+                    misCursosContainer.style.display = 'block';
+                    console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
+                } else {
+                    misCursosContainer.style.display = 'none';
+                    console.log('Ocultando botón Mis Cursos para rol:', userRole);
+                }
+                
+                // Inicializar carrito para usuarios autenticados
+                if (window.cart && typeof window.cart.init === 'function') {
+                    window.cart.init();
+                }
+            }
+
+            function showLoginButton() {
+                // Mostrar botón de login
+                document.getElementById('loginButtonContainer').style.display = 'block';
+                
+                // Ocultar dropdown del usuario
+                document.getElementById('userDropdownContainer').style.display = 'none';
+
+                // Ocultar botón "Mis Cursos"
+                document.getElementById('misCursosContainer').style.display = 'none';
+            }
+
+            // Inicializar verificación de autenticación
+            checkAuthAndUpdateNavbar();
+
+
+        });
+    </script>
+    
+    <!-- Script para efecto parallax -->
+    <!-- <script src="js/parallax-effect.js"></script> -->
+    
+    <!-- Chatbot Script -->
+    <script src="js/chatbot.js"></script>
+</body>
+
+</html>

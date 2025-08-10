@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autenticando - Lumina LMS</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <!-- Auth0 SDK -->
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+    
+    <!-- Styles -->
+    <link href="../styles/login.css" rel="stylesheet">
+    <style>
+        .callback-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #0a0e1a;
+        }
+        
+        .callback-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .callback-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        .callback-icon i {
+            font-size: 36px;
+            color: white;
+        }
+        
+        .callback-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .callback-message {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .callback-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            padding: 16px;
+            color: #ef4444;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .retry-button {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .retry-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="callback-container">
+        <div class="callback-card">
+            <div class="callback-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            
+            <h2 class="callback-title">Autenticando...</h2>
+            <p class="callback-message">
+                Estamos procesando tu autenticación. Por favor espera un momento.
+            </p>
+            
+            <div class="callback-spinner"></div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="errorText"></span>
+                <br>
+                <button class="retry-button" onclick="retryAuth()">
+                    <i class="fas fa-redo"></i> Reintentar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let auth0 = null;
+
+        async function initAuth0() {
+            try {
+                auth0 = await createAuth0Client({
+                    domain: 'dev-t817winxdvcgqv2e.us.auth0.com',
+                    client_id: 'zMmhbQWa6CGsTiW4zDen7clOLcMdEhYN',
+                    redirect_uri: window.location.origin + '/html/callback.html',
+                    cacheLocation: 'localstorage',
+                    useRefreshTokens: true
+                });
+
+                // Handle the callback
+                await handleCallback();
+            } catch (error) {
+                console.error('Error inicializando Auth0:', error);
+                showError('Error al inicializar la autenticación');
+            }
+        }
+
+        async function handleCallback() {
+            try {
+                // Check if we have the required parameters
+                const query = window.location.search;
+                if (!query.includes("code=") || !query.includes("state=")) {
+                    throw new Error('Parámetros de autenticación faltantes');
+                }
+
+                // Handle the redirect callback
+                await auth0.handleRedirectCallback();
+                
+                // Get user info
+                const user = await auth0.getUser();
+                console.log('Usuario autenticado:', user);
+                
+                // Store user info
+                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('authToken', await auth0.getTokenSilently());
+                
+                // Show success and redirect
+                showSuccess();
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error en callback:', error);
+                showError('Error en la autenticación: ' + error.message);
+            }
+        }
+
+        function showSuccess() {
+            const icon = document.querySelector('.callback-icon i');
+            const title = document.querySelector('.callback-title');
+            const message = document.querySelector('.callback-message');
+            const spinner = document.querySelector('.callback-spinner');
+            
+            icon.className = 'fas fa-check-circle';
+            icon.style.color = '#10b981';
+            title.textContent = '¡Autenticación Exitosa!';
+            message.textContent = 'Redirigiendo al dashboard...';
+            spinner.style.display = 'none';
+        }
+
+        function showError(errorText) {
+            const icon = document.querySelector('.callback-icon i');
+            const title = document.querySelector('.callback-title');
+            const message = document.querySelector('.callback-message');
+            const spinner = document.querySelector('.callback-spinner');
+            const errorDiv = document.getElementById('errorMessage');
+            const errorTextSpan = document.getElementById('errorText');
+            
+            icon.className = 'fas fa-exclamation-triangle';
+            icon.style.color = '#ef4444';
+            title.textContent = 'Error de Autenticación';
+            message.textContent = 'Hubo un problema con tu autenticación.';
+            spinner.style.display = 'none';
+            errorTextSpan.textContent = errorText;
+            errorDiv.style.display = 'block';
+        }
+
+        function retryAuth() {
+            // Redirect back to login page
+            window.location.href = 'login.html';
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initAuth0);
+    </script>
+</body>
+</html> 

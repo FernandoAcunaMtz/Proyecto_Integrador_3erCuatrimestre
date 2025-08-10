@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React para Principiantes - Lumina Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="../../styles/main.css" rel="stylesheet">
+    <link href="../../styles/course-player.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .course-player {
+            background: #0f1419;
+            min-height: 100vh;
+            color: #ffffff;
+        }
+        
+        .course-sidebar {
+            background: #1a1f2e;
+            border-right: 1px solid #2d3748;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            width: 320px;
+            z-index: 1000;
+        }
+        
+        .course-content {
+            margin-left: 320px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .video-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23667eea;stop-opacity:1" /><stop offset="100%" style="stop-color:%23764ba2;stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(%23grad1)"/><circle cx="300" cy="200" r="80" fill="rgba(255,255,255,0.1)"/><circle cx="900" cy="400" r="120" fill="rgba(255,255,255,0.05)"/><rect x="400" y="150" width="400" height="300" fill="rgba(255,255,255,0.1)" rx="20"/></svg>');
+            min-height: 400px;
+            max-height: 60vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-placeholder {
+            text-align: center;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #61dafb;
+            display: block;
+        }
+        
+        .course-info {
+            padding: 2rem;
+            background: #1a1f2e;
+            flex: 1;
+            overflow-y: visible;
+        }
+        
+        .lesson-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+        
+        .lesson-description {
+            color: #a0aec0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .lesson-content {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .code-block {
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            color: #e2e8f0;
+        }
+        
+        .code-block .keyword { color: #ff6b6b; }
+        .code-block .string { color: #51cf66; }
+        .code-block .comment { color: #868e96; }
+        .code-block .function { color: #4dabf7; }
+        .code-block .component { color: #61dafb; }
+        .code-block .jsx { color: #ffd43b; }
+        
+        .lesson-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #4a5568;
+        }
+        
+        .nav-btn {
+            background: #61dafb;
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: #4fc3f7;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn:disabled {
+            background: #4a5568;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #2d3748;
+            background: #2d3748;
+        }
+        
+        .course-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        
+        .course-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .course-progress {
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+        
+        .progress-bar {
+            background: #4a5568;
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #61dafb;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .lessons-list {
+            padding: 1rem 0;
+        }
+        
+        .lesson-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #2d3748;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .lesson-item:hover {
+            background: #2d3748;
+        }
+        
+        .lesson-item.active {
+            background: #61dafb;
+            color: #000;
+        }
+        
+        .lesson-item.completed {
+            background: #38a169;
+            color: white;
+        }
+        
+        .lesson-info {
+            flex: 1;
+        }
+        
+        .lesson-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .lesson-duration {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .lesson-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .lesson-status.pending {
+            background: #4a5568;
+            color: #a0aec0;
+        }
+        
+        .lesson-status.completed {
+            background: #38a169;
+            color: white;
+        }
+        
+        .lesson-status.current {
+            background: #61dafb;
+            color: #000;
+        }
+        
+        .course-header {
+            background: #2d3748;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: #ffffff;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            background: #4a5568;
+            border: none;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #61dafb;
+            color: #000;
+        }
+        
+        .quiz-container {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .quiz-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .quiz-option {
+            background: #1a202c;
+            border: 2px solid #4a5568;
+            border-radius: 6px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            border-color: #61dafb;
+            background: #2d3748;
+        }
+        
+        .quiz-option.selected {
+            border-color: #61dafb;
+            background: #61dafb;
+            color: #000;
+        }
+        
+        .quiz-option.correct {
+            border-color: #38a169;
+            background: #38a169;
+            color: white;
+        }
+        
+        .quiz-option.incorrect {
+            border-color: #e53e3e;
+            background: #e53e3e;
+            color: white;
+        }
+        
+        .exercise-container {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .exercise-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .exercise-description {
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .code-editor {
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            color: #e2e8f0;
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        .run-btn {
+            background: #38a169;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .run-btn:hover {
+            background: #2f855a;
+        }
+        
+        .output-container {
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+            color: #e2e8f0;
+        }
+        
+        .preview-container {
+            background: #ffffff;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 200px;
+            color: #000000;
+        }
+        
+        @media (max-width: 768px) {
+            .course-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .course-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .course-content {
+                margin-left: 0;
+            }
+            
+            .video-container {
+                min-height: 300px;
+                max-height: 40vh;
+            }
+            
+            .course-info {
+                overflow-y: visible;
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+        
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="course-player">
+    <!-- Sidebar -->
+    <div class="course-sidebar" id="courseSidebar">
+        <div class="sidebar-header">
+                            <div class="course-title">
+                    <img src="../../img/luminalogonotextblanco.webp" alt="Lumina Logo" class="course-logo">
+                    React para Principiantes
+                </div>
+            <div class="course-progress">
+                <span id="progressText">0% completado</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="lessons-list" id="lessonsList">
+            <!-- Lecciones se cargan dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="course-content">
+        <!-- Header -->
+        <div class="course-header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div>
+                    <h4 id="currentLessonTitle">Bienvenido al Curso</h4>
+                    <small id="currentLessonDuration">0 min</small>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button class="action-btn" onclick="toggleNotes()">
+                    <i class="fas fa-sticky-note me-1"></i>Notas
+                </button>
+                <a href="../../courses.html" class="action-btn mis-cursos-btn">
+                    <i class="fas fa-graduation-cap me-1"></i>Mis Cursos
+                </a>
+                <button class="action-btn" onclick="toggleBookmark()">
+                    <i class="fas fa-bookmark me-1"></i>Marcar
+                </button>
+                <button class="action-btn" onclick="showHelp()">
+                    <i class="fas fa-question-circle me-1"></i>Ayuda
+                </button>
+            </div>
+        </div>
+
+        <!-- Contenedor de Video -->
+        <div class="video-container">
+            <div class="video-placeholder" id="videoPlaceholder">
+                <i class="fas fa-play-circle"></i>
+                <h3>Video de la Lección</h3>
+                <p>Haz clic en una lección para comenzar</p>
+            </div>
+        </div>
+
+        <!-- Información del Curso -->
+        <div class="course-info">
+            <div id="lessonContent">
+                <div class="lesson-title">Bienvenido a React para Principiantes</div>
+                <div class="lesson-description">
+                    Construye aplicaciones web interactivas con la biblioteca más popular. 
+                    Aprende React desde cero hasta proyectos reales con las mejores prácticas.
+                </div>
+                
+                <div class="lesson-content">
+                    <h5>¿Qué aprenderás?</h5>
+                    <ul>
+                        <li>Fundamentos de React y JSX</li>
+                        <li>Componentes Funcionales y de Clase</li>
+                        <li>Hooks (useState, useEffect, useContext)</li>
+                        <li>Props y State Management</li>
+                        <li>Context API y Redux Básico</li>
+                        <li>React Router para Navegación</li>
+                        <li>Testing con Jest y React Testing Library</li>
+                    </ul>
+                    
+                    <h5>Requisitos</h5>
+                    <ul>
+                        <li>Conocimientos sólidos de JavaScript ES6+</li>
+                        <li>HTML y CSS básicos</li>
+                        <li>Node.js instalado en tu computadora</li>
+                        <li>Un editor de código (VS Code recomendado)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="lesson-navigation">
+                <button class="nav-btn" id="prevBtn" disabled>
+                    <i class="fas fa-chevron-left me-1"></i>Anterior
+                </button>
+                <button class="nav-btn" id="nextBtn" onclick="nextLesson()">
+                    Siguiente<i class="fas fa-chevron-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/auth0-config.js"></script>
+    <script>
+        // Datos del curso
+        const courseData = {
+            id: 3,
+            title: 'React para Principiantes',
+            instructor: 'María López',
+            totalLessons: 22,
+            currentLesson: 0,
+            progress: 0,
+            lessons: [
+                {
+                    id: 1,
+                    title: 'Introducción a React',
+                    duration: '20 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">Introducción a React</div>
+                        <div class="lesson-description">
+                            Conoce qué es React, por qué es tan popular y cómo ha revolucionado el desarrollo web.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>¿Qué es React?</h5>
+                            <p>React es una biblioteca de JavaScript desarrollada por Facebook (ahora Meta) que permite crear interfaces de usuario interactivas y reutilizables. 
+                            Es especialmente popular para construir aplicaciones de una sola página (SPA).</p>
+                            
+                            <h5>¿Por qué React?</h5>
+                            <ul>
+                                <li><strong>Componentes Reutilizables:</strong> Construye interfaces modulares</li>
+                                <li><strong>Virtual DOM:</strong> Rendimiento optimizado</li>
+                                <li><strong>Ecosistema Rico:</strong> Miles de librerías y herramientas</li>
+                                <li><strong>Comunidad Activa:</strong> Soporte y recursos abundantes</li>
+                                <li><strong>Demanda Laboral:</strong> Una de las habilidades más solicitadas</li>
+                            </ul>
+                            
+                            <h5>Tu Primer Componente React:</h5>
+                            <div class="code-block">
+                                <pre><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="component">App</span>() {
+    <span class="keyword">return</span> (
+        <span class="jsx">&lt;div&gt;</span>
+            <span class="jsx">&lt;h1&gt;</span>¡Hola React!<span class="jsx">&lt;/h1&gt;</span>
+            <span class="jsx">&lt;p&gt;</span>Mi primera aplicación React<span class="jsx">&lt;/p&gt;</span>
+        <span class="jsx">&lt;/div&gt;</span>
+    );
+}
+
+<span class="keyword">export default</span> <span class="component">App</span>;</pre>
+                            </div>
+                            
+                            <h5>Herramientas Necesarias:</h5>
+                            <ul>
+                                <li><strong>Node.js:</strong> Entorno de ejecución de JavaScript</li>
+                                <li><strong>npm o yarn:</strong> Gestores de paquetes</li>
+                                <li><strong>Create React App:</strong> Herramienta para crear proyectos React</li>
+                                <li><strong>VS Code:</strong> Editor recomendado con extensiones para React</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: 2,
+                    title: 'JSX y Componentes',
+                    duration: '25 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">JSX y Componentes</div>
+                        <div class="lesson-description">
+                            Aprende JSX, la sintaxis que permite escribir HTML en JavaScript, y cómo crear componentes React.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>¿Qué es JSX?</h5>
+                            <p>JSX es una extensión de sintaxis para JavaScript que permite escribir código similar a HTML dentro de JavaScript. 
+                            React utiliza JSX para describir cómo debería verse la interfaz de usuario.</p>
+                            
+                            <h5>Sintaxis JSX Básica:</h5>
+                            <div class="code-block">
+                                <pre><span class="comment">// JSX básico</span>
+<span class="keyword">const</span> element = (
+    <span class="jsx">&lt;div&gt;</span>
+        <span class="jsx">&lt;h1&gt;</span>Mi Título<span class="jsx">&lt;/h1&gt;</span>
+        <span class="jsx">&lt;p&gt;</span>Mi párrafo<span class="jsx">&lt;/p&gt;</span>
+    <span class="jsx">&lt;/div&gt;</span>
+);
+
+<span class="comment">// Expresiones JavaScript en JSX</span>
+<span class="keyword">const</span> name = <span class="string">'Juan'</span>;
+<span class="keyword">const</span> greeting = (
+    <span class="jsx">&lt;h1&gt;</span>Hola, {name}!<span class="jsx">&lt;/h1&gt;</span>
+);</pre>
+                            </div>
+                            
+                            <h5>Componentes Funcionales:</h5>
+                            <div class="code-block">
+                                <pre><span class="keyword">function</span> <span class="component">Welcome</span>({ name }) {
+    <span class="keyword">return</span> (
+        <span class="jsx">&lt;div&gt;</span>
+            <span class="jsx">&lt;h2&gt;</span>Bienvenido, {name}!<span class="jsx">&lt;/h2&gt;</span>
+            <span class="jsx">&lt;p&gt;</span>Gracias por unirte a nuestro curso.<span class="jsx">&lt;/p&gt;</span>
+        <span class="jsx">&lt;/div&gt;</span>
+    );
+}
+
+<span class="comment">// Uso del componente</span>
+<span class="keyword">function</span> <span class="component">App</span>() {
+    <span class="keyword">return</span> (
+        <span class="jsx">&lt;div&gt;</span>
+            <span class="jsx">&lt;Welcome</span> name=<span class="string">"María"</span> <span class="jsx">/&gt;</span>
+        <span class="jsx">&lt;/div&gt;</span>
+    );
+}</pre>
+                            </div>
+                            
+                            <h5>Reglas Importantes de JSX:</h5>
+                            <ul>
+                                <li><strong>Un solo elemento raíz:</strong> Todo JSX debe estar envuelto en un elemento</li>
+                                <li><strong>Atributos en camelCase:</strong> class → className, onclick → onClick</li>
+                                <li><strong>Expresiones JavaScript:</strong> Usa {} para insertar JavaScript</li>
+                                <li><strong>Elementos deben cerrarse:</strong> &lt;img /&gt; o &lt;div&gt;&lt;/div&gt;</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: 3,
+                    title: 'Ejercicio: Primer Componente',
+                    duration: '15 min',
+                    type: 'exercise',
+                    content: `
+                        <div class="lesson-title">Ejercicio: Tu Primer Componente</div>
+                        <div class="lesson-description">
+                            Crea tu primer componente React funcional con JSX.
+                        </div>
+                        
+                        <div class="exercise-container">
+                            <div class="exercise-title">Ejercicio: Componente de Perfil</div>
+                            <div class="exercise-description">
+                                Crea un componente llamado "Profile" que muestre información de un usuario. 
+                                El componente debe recibir props para nombre, edad y ocupación.
+                            </div>
+                            
+                            <textarea class="code-editor" id="exerciseEditor" placeholder="Escribe tu componente React aquí...">
+import React from 'react';
+
+// Crea tu componente Profile aquí
+function Profile({ name, age, occupation }) {
+    return (
+        <div>
+            {/* Tu código aquí */}
+        </div>
+    );
+}
+
+// Componente App para usar Profile
+function App() {
+    return (
+        <div>
+            <h1>Mi Aplicación React</h1>
+            <Profile 
+                name="Ana García" 
+                age={28} 
+                occupation="Desarrolladora Frontend" 
+            />
+        </div>
+    );
+}
+
+export default App;
+                            </textarea>
+                            <button class="run-btn" onclick="runExercise()">Ejecutar Código</button>
+                            <div class="preview-container" id="exercisePreview"></div>
+                        </div>
+                    `
+                },
+                {
+                    id: 4,
+                    title: 'Hooks: useState',
+                    duration: '30 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">Hooks: useState</div>
+                        <div class="lesson-description">
+                            Aprende a manejar el estado en componentes funcionales con el hook useState.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>¿Qué son los Hooks?</h5>
+                            <p>Los Hooks son funciones especiales que permiten usar estado y otras características de React en componentes funcionales. 
+                            useState es el hook más básico y fundamental.</p>
+                            
+                            <h5>useState Básico:</h5>
+                            <div class="code-block">
+                                <pre><span class="keyword">import</span> React, { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="component">Counter</span>() {
+    <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);
+    
+    <span class="keyword">return</span> (
+        <span class="jsx">&lt;div&gt;</span>
+            <span class="jsx">&lt;p&gt;</span>Contador: {count}<span class="jsx">&lt;/p&gt;</span>
+            <span class="jsx">&lt;button</span> onClick={() => setCount(count + 1)}<span class="jsx">&gt;</span>
+                Incrementar
+            <span class="jsx">&lt;/button&gt;</span>
+        <span class="jsx">&lt;/div&gt;</span>
+    );
+}</pre>
+                            </div>
+                            
+                            <h5>useState con Objetos:</h5>
+                            <div class="code-block">
+                                <pre><span class="keyword">function</span> <span class="component">UserForm</span>() {
+    <span class="keyword">const</span> [user, setUser] = useState({
+        name: <span class="string">''</span>,
+        email: <span class="string">''</span>,
+        age: <span class="number">0</span>
+    });
+    
+    <span class="keyword">const</span> handleChange = (e) => {
+        <span class="keyword">const</span> { name, value } = e.target;
+        setUser(prevUser => ({
+            ...prevUser,
+            [name]: value
+        }));
+    };
+    
+    <span class="keyword">return</span> (
+        <span class="jsx">&lt;form&gt;</span>
+            <span class="jsx">&lt;input</span>
+                type=<span class="string">"text"</span>
+                name=<span class="string">"name"</span>
+                value={user.name}
+                onChange={handleChange}
+                placeholder=<span class="string">"Nombre"</span>
+            <span class="jsx">/&gt;</span>
+            <span class="jsx">&lt;input</span>
+                type=<span class="string">"email"</span>
+                name=<span class="string">"email"</span>
+                value={user.email}
+                onChange={handleChange}
+                placeholder=<span class="string">"Email"</span>
+            <span class="jsx">/&gt;</span>
+        <span class="jsx">&lt;/form&gt;</span>
+    );
+}</pre>
+                            </div>
+                            
+                            <h5>Reglas de los Hooks:</h5>
+                            <ul>
+                                <li><strong>Solo en el nivel superior:</strong> No dentro de loops, condiciones o funciones anidadas</li>
+                                <li><strong>Solo en componentes funcionales:</strong> No en componentes de clase</li>
+                                <li><strong>Orden consistente:</strong> Los hooks deben llamarse en el mismo orden siempre</li>
+                                <li><strong>Nombres descriptivos:</strong> Usa nombres que describan el propósito del estado</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: 5,
+                    title: 'Quiz: React Fundamentals',
+                    duration: '15 min',
+                    type: 'quiz',
+                    content: `
+                        <div class="lesson-title">Quiz: Fundamentos de React</div>
+                        <div class="lesson-description">
+                            Pon a prueba tus conocimientos sobre React, JSX y Hooks.
+                        </div>
+                        
+                        <div class="quiz-container" id="quizContainer">
+                            <div class="quiz-question" id="quizQuestion">
+                                ¿Cuál es la diferencia principal entre componentes funcionales y de clase en React?
+                            </div>
+                            <div class="quiz-options" id="quizOptions">
+                                <div class="quiz-option" data-correct="true">Los componentes funcionales usan Hooks para estado, los de clase usan this.state</div>
+                                <div class="quiz-option" data-correct="false">Los componentes funcionales son más rápidos que los de clase</div>
+                                <div class="quiz-option" data-correct="false">Los componentes de clase están obsoletos en React moderno</div>
+                                <div class="quiz-option" data-correct="false">No hay diferencia, son intercambiables</div>
+                            </div>
+                            <button class="nav-btn" onclick="checkQuizAnswer()" style="margin-top: 1rem;">Verificar Respuesta</button>
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        // Variables globales
+        let currentLessonIndex = 0;
+        let courseProgress = 0;
+        let completedLessons = new Set();
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourse();
+            setupEventListeners();
+            updateProgress();
+        });
+
+        function loadCourse() {
+            renderLessonsList();
+            loadLesson(currentLessonIndex);
+        }
+
+        function renderLessonsList() {
+            const lessonsList = document.getElementById('lessonsList');
+            lessonsList.innerHTML = '';
+
+            courseData.lessons.forEach((lesson, index) => {
+                const lessonItem = document.createElement('div');
+                lessonItem.className = `lesson-item ${index === currentLessonIndex ? 'active' : ''} ${completedLessons.has(index) ? 'completed' : ''}`;
+                lessonItem.onclick = () => loadLesson(index);
+
+                const status = completedLessons.has(index) ? 'completed' : 
+                              index === currentLessonIndex ? 'current' : 'pending';
+                const statusIcon = completedLessons.has(index) ? '✓' : 
+                                  index === currentLessonIndex ? '▶' : index + 1;
+
+                lessonItem.innerHTML = `
+                    <div class="lesson-info">
+                        <div class="lesson-name">${lesson.title}</div>
+                        <div class="lesson-duration">${lesson.duration}</div>
+                    </div>
+                    <div class="lesson-status ${status}">${statusIcon}</div>
+                `;
+
+                lessonsList.appendChild(lessonItem);
+            });
+        }
+
+        function loadLesson(index) {
+            if (index < 0 || index >= courseData.lessons.length) return;
+
+            currentLessonIndex = index;
+            const lesson = courseData.lessons[index];
+
+            // Actualizar título y duración
+            document.getElementById('currentLessonTitle').textContent = lesson.title;
+            document.getElementById('currentLessonDuration').textContent = lesson.duration;
+
+            // Actualizar contenido
+            document.getElementById('lessonContent').innerHTML = lesson.content;
+
+            // Actualizar video placeholder
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            if (lesson.type === 'video') {
+                videoPlaceholder.innerHTML = `
+                    <i class="fas fa-play-circle"></i>
+                    <h3>${lesson.title}</h3>
+                    <p>Video de ${lesson.duration}</p>
+                    <button class="nav-btn" onclick="playVideo()">Reproducir Video</button>
+                `;
+            } else if (lesson.type === 'exercise') {
+                videoPlaceholder.innerHTML = `
+                    <i class="fas fa-code"></i>
+                    <h3>${lesson.title}</h3>
+                    <p>Ejercicio práctico</p>
+                `;
+            } else if (lesson.type === 'quiz') {
+                videoPlaceholder.innerHTML = `
+                    <i class="fas fa-question-circle"></i>
+                    <h3>${lesson.title}</h3>
+                    <p>Evaluación de conocimientos</p>
+                `;
+            }
+
+            // Actualizar navegación
+            updateNavigation();
+            renderLessonsList();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentLessonIndex === 0;
+            nextBtn.disabled = currentLessonIndex === courseData.lessons.length - 1;
+        }
+
+        function nextLesson() {
+            if (currentLessonIndex < courseData.lessons.length - 1) {
+                completeCurrentLesson();
+                loadLesson(currentLessonIndex + 1);
+            }
+        }
+
+        function prevLesson() {
+            if (currentLessonIndex > 0) {
+                loadLesson(currentLessonIndex - 1);
+            }
+        }
+
+        function completeCurrentLesson() {
+            completedLessons.add(currentLessonIndex);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = (completedLessons.size / courseData.lessons.length) * 100;
+            courseProgress = Math.round(progress);
+
+            document.getElementById('progressText').textContent = `${courseProgress}% completado`;
+            document.getElementById('progressFill').style.width = `${courseProgress}%`;
+        }
+
+        function playVideo() {
+            // Simular reproducción de video
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            videoPlaceholder.innerHTML = `
+                <i class="fas fa-play-circle" style="color: #61dafb;"></i>
+                <h3>Reproduciendo...</h3>
+                <p>Video en progreso</p>
+                <div style="margin-top: 1rem;">
+                    <button class="nav-btn" onclick="pauseVideo()">Pausar</button>
+                </div>
+            `;
+        }
+
+        function pauseVideo() {
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            videoPlaceholder.innerHTML = `
+                <i class="fas fa-pause-circle"></i>
+                <h3>Video Pausado</h3>
+                <p>Haz clic para continuar</p>
+                <button class="nav-btn" onclick="playVideo()">Continuar</button>
+            `;
+        }
+
+        function runExercise() {
+            const code = document.getElementById('exerciseEditor').value;
+            const preview = document.getElementById('exercisePreview');
+            
+            try {
+                // Simular ejecución de React (en un entorno real se usaría React)
+                const reactCode = code.replace(/import.*?from.*?['"]react['"];?\n?/g, '');
+                const componentMatch = reactCode.match(/function\s+(\w+)\s*\([^)]*\)\s*{[\s\S]*?}/);
+                
+                if (componentMatch) {
+                    const componentName = componentMatch[1];
+                    preview.innerHTML = `
+                        <div style="padding: 1rem; border: 2px dashed #61dafb; border-radius: 8px; text-align: center;">
+                            <h3>Vista Previa del Componente ${componentName}</h3>
+                            <p style="color: #666;">Este es un simulador. En un entorno real de React, verías tu componente renderizado aquí.</p>
+                            <div style="background: #f8f9fa; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
+                                <strong>Componente detectado:</strong> ${componentName}
+                            </div>
+                            <small style="color: #999;">Para ver el resultado real, crea un proyecto React con Create React App</small>
+                        </div>
+                    `;
+                } else {
+                    preview.innerHTML = '<p style="color: #e53e3e;">Error: No se detectó un componente React válido.</p>';
+                }
+            } catch (error) {
+                preview.innerHTML = `<p style="color: #e53e3e;">Error: ${error.message}</p>`;
+            }
+        }
+
+        function checkQuizAnswer() {
+            const selectedOption = document.querySelector('.quiz-option.selected');
+            if (!selectedOption) {
+                alert('Por favor selecciona una respuesta');
+                return;
+            }
+
+            const isCorrect = selectedOption.dataset.correct === 'true';
+            
+            // Mostrar resultado
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.correct === 'true') {
+                    option.classList.add('correct');
+                } else if (option.classList.contains('selected')) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                alert('¡Correcto! ¡Bien hecho!');
+                completeCurrentLesson();
+            } else {
+                alert('Incorrecto. Intenta de nuevo.');
+            }
+        }
+
+        function setupEventListeners() {
+            // Quiz options
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('quiz-option')) {
+                    document.querySelectorAll('.quiz-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    e.target.classList.add('selected');
+                }
+            });
+
+            // Sidebar toggle para móviles
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.getElementById('courseSidebar').classList.toggle('open');
+            });
+
+            // Navegación con teclado
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    nextLesson();
+                } else if (e.key === 'ArrowLeft') {
+                    prevLesson();
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    playVideo();
+                }
+            });
+        }
+
+        function toggleNotes() {
+            alert('Funcionalidad de notas en desarrollo');
+        }
+
+        function toggleBookmark() {
+            alert('Funcionalidad de marcadores en desarrollo');
+        }
+
+        function showHelp() {
+            alert('Ayuda: Usa las flechas del teclado para navegar entre lecciones. Espacio para reproducir/pausar video.');
+        }
+
+        // Exportar funciones para acceso global
+        window.nextLesson = nextLesson;
+        window.prevLesson = prevLesson;
+        window.playVideo = playVideo;
+        window.pauseVideo = pauseVideo;
+        window.runExercise = runExercise;
+        window.checkQuizAnswer = checkQuizAnswer;
+        window.toggleNotes = toggleNotes;
+        window.toggleBookmark = toggleBookmark;
+        window.showHelp = showHelp;
+    </script>
+</body>
+</html>

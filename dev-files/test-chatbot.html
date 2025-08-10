@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba del Chatbot - Lumina Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="styles/main.css" rel="stylesheet">
+    <link href="styles/chatbot.css" rel="stylesheet">
+    <style>
+        .test-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem 0;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .test-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        .test-button {
+            margin: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="test-card">
+                        <div class="text-center mb-4">
+                            <h1 class="display-4 text-primary">
+                                <i class="fas fa-robot me-3"></i>
+                                Prueba del Chatbot
+                            </h1>
+                            <p class="lead text-muted">Lumina Learning - Asistente Virtual</p>
+                        </div>
+
+                        <div class="test-section">
+                            <h3><i class="fas fa-info-circle me-2"></i>Información del Chatbot</h3>
+                            <p>Este chatbot está diseñado para ayudar a los usuarios con:</p>
+                            <ul>
+                                <li><strong>Navegación del sitio</strong> - Encontrar páginas y funcionalidades</li>
+                                <li><strong>Información de cursos</strong> - Detalles sobre cursos disponibles</li>
+                                <li><strong>Proceso de registro</strong> - Cómo crear cuenta y matricularse</li>
+                                <li><strong>Funcionalidades</strong> - Explicar características de la plataforma</li>
+                                <li><strong>Soporte técnico</strong> - Resolver problemas básicos</li>
+                            </ul>
+                        </div>
+
+                        <div class="test-section">
+                            <h3><i class="fas fa-cogs me-2"></i>Estado del Sistema</h3>
+                            <div id="system-status" class="alert alert-info">
+                                <i class="fas fa-spinner fa-spin me-2"></i>
+                                Verificando estado del sistema...
+                            </div>
+                            <div id="api-status" class="alert alert-warning" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                OpenAI API no configurada - Usando respuestas predefinidas
+                            </div>
+                        </div>
+
+                        <div class="test-section">
+                            <h3><i class="fas fa-comments me-2"></i>Preguntas de Prueba</h3>
+                            <p>Haz clic en los botones para probar diferentes tipos de preguntas:</p>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-primary test-button w-100" onclick="testQuestion('¿Dónde puedo encontrar los cursos?')">
+                                        <i class="fas fa-book me-2"></i>Cursos
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-primary test-button w-100" onclick="testQuestion('¿Cómo me registro en la plataforma?')">
+                                        <i class="fas fa-user-plus me-2"></i>Registro
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-primary test-button w-100" onclick="testQuestion('¿Dónde está mi perfil?')">
+                                        <i class="fas fa-user me-2"></i>Perfil
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-primary test-button w-100" onclick="testQuestion('¿Cómo funciona el sistema de pagos?')">
+                                        <i class="fas fa-credit-card me-2"></i>Pagos
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-primary test-button w-100" onclick="testQuestion('¿Dónde puedo ver el calendario?')">
+                                        <i class="fas fa-calendar me-2"></i>Calendario
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-primary test-button w-100" onclick="testQuestion('¿Cómo contacto al soporte?')">
+                                        <i class="fas fa-headset me-2"></i>Soporte
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="test-section">
+                            <h3><i class="fas fa-tools me-2"></i>Herramientas de Debug</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="btn btn-info test-button w-100" onclick="testAPI()">
+                                        <i class="fas fa-plug me-2"></i>Probar API
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-warning test-button w-100" onclick="getSiteInfo()">
+                                        <i class="fas fa-info me-2"></i>Info del Sitio
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <button class="btn btn-success test-button w-100" onclick="clearChatHistory()">
+                                        <i class="fas fa-trash me-2"></i>Limpiar Historial
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-secondary test-button w-100" onclick="showChatbot()">
+                                        <i class="fas fa-eye me-2"></i>Mostrar Chatbot
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="index.html" class="btn btn-primary btn-lg">
+                                <i class="fas fa-home me-2"></i>Volver al Inicio
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/chatbot.js"></script>
+    
+    <script>
+        // Función para probar preguntas
+        function testQuestion(question) {
+            if (window.luminaChatbot) {
+                // Simular escritura en el input
+                const input = document.getElementById('chatbot-input');
+                if (input) {
+                    input.value = question;
+                    // Abrir chatbot si no está abierto
+                    if (!window.luminaChatbot.isOpen) {
+                        window.luminaChatbot.openChatbot();
+                    }
+                    // Enviar mensaje
+                    setTimeout(() => {
+                        window.luminaChatbot.sendMessage();
+                    }, 500);
+                }
+            } else {
+                alert('Chatbot no está disponible. Asegúrate de que el servidor esté ejecutándose.');
+            }
+        }
+
+        // Función para probar la API
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/chatbot/test');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('✅ API funcionando correctamente\n\n' + data.message);
+                } else if (data.status === 'warning') {
+                    alert('⚠️ ' + data.message);
+                } else {
+                    alert('❌ Error en la API\n\n' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error al conectar con la API\n\n' + error.message);
+            }
+        }
+
+        // Función para obtener información del sitio
+        async function getSiteInfo() {
+            try {
+                const response = await fetch('/api/chatbot/site-info');
+                const data = await response.json();
+                
+                let info = `📋 Información del Sitio\n\n`;
+                info += `🏫 Nombre: ${data.site}\n`;
+                info += `📝 Descripción: ${data.description}\n\n`;
+                info += `📄 Páginas (${Object.keys(data.pages).length}):\n`;
+                Object.entries(data.pages).forEach(([path, desc]) => {
+                    info += `• ${path}: ${desc}\n`;
+                });
+                
+                alert(info);
+            } catch (error) {
+                alert('❌ Error al obtener información del sitio\n\n' + error.message);
+            }
+        }
+
+        // Función para limpiar historial
+        function clearChatHistory() {
+            if (window.luminaChatbot) {
+                window.luminaChatbot.clearHistory();
+                alert('🗑️ Historial del chat limpiado');
+            } else {
+                alert('Chatbot no está disponible');
+            }
+        }
+
+        // Función para mostrar chatbot
+        function showChatbot() {
+            if (window.luminaChatbot) {
+                window.luminaChatbot.openChatbot();
+            } else {
+                alert('Chatbot no está disponible');
+            }
+        }
+
+        // Verificar estado del sistema al cargar
+        document.addEventListener('DOMContentLoaded', async function() {
+            const statusElement = document.getElementById('system-status');
+            const apiStatusElement = document.getElementById('api-status');
+            
+            try {
+                // Probar conexión con la API
+                const response = await fetch('/api/chatbot/test');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    statusElement.className = 'alert alert-success';
+                    statusElement.innerHTML = '<i class="fas fa-check-circle me-2"></i>Sistema funcionando correctamente';
+                } else if (data.status === 'warning') {
+                    statusElement.className = 'alert alert-warning';
+                    statusElement.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Sistema funcionando con limitaciones';
+                    apiStatusElement.style.display = 'block';
+                } else {
+                    statusElement.className = 'alert alert-danger';
+                    statusElement.innerHTML = '<i class="fas fa-times-circle me-2"></i>Error en el sistema';
+                }
+            } catch (error) {
+                statusElement.className = 'alert alert-danger';
+                statusElement.innerHTML = '<i class="fas fa-times-circle me-2"></i>No se puede conectar con el servidor';
+            }
+        });
+    </script>
+</body>
+</html>

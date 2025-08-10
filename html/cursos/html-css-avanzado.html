@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML y CSS Avanzado - Lumina Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="../../styles/main.css" rel="stylesheet">
+    <link href="../../styles/course-player.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .course-player {
+            background: #0f1419;
+            min-height: 100vh;
+            color: #ffffff;
+        }
+        
+        .course-sidebar {
+            background: #1a1f2e;
+            border-right: 1px solid #2d3748;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            width: 320px;
+            z-index: 1000;
+        }
+        
+        .course-content {
+            margin-left: 320px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .video-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23667eea;stop-opacity:1" /><stop offset="100%" style="stop-color:%23764ba2;stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(%23grad1)"/><circle cx="300" cy="200" r="80" fill="rgba(255,255,255,0.1)"/><circle cx="900" cy="400" r="120" fill="rgba(255,255,255,0.05)"/><rect x="400" y="150" width="400" height="300" fill="rgba(255,255,255,0.1)" rx="20"/></svg>');
+            min-height: 400px;
+            max-height: 60vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-placeholder {
+            text-align: center;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #4FC3F7;
+            display: block;
+        }
+        
+        .course-info {
+            padding: 2rem;
+            background: #1a1f2e;
+            flex: 1;
+            overflow-y: visible;
+        }
+        
+        .lesson-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+        
+        .lesson-description {
+            color: #a0aec0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .lesson-content {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .code-block {
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            color: #e2e8f0;
+        }
+        
+        .code-block .keyword { color: #ff6b6b; }
+        .code-block .string { color: #51cf66; }
+        .code-block .comment { color: #868e96; }
+        .code-block .function { color: #4dabf7; }
+        .code-block .tag { color: #ff6b6b; }
+        .code-block .attribute { color: #4dabf7; }
+        .code-block .value { color: #51cf66; }
+        .code-block .selector { color: #ffd43b; }
+        .code-block .property { color: #4dabf7; }
+        
+        .nav-btn {
+            background: #4FC3F7;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-btn:hover {
+            background: #29B6F6;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn:disabled {
+            background: #4a5568;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .lesson-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #4a5568;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+            background: #2d3748;
+        }
+        
+        .course-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        
+        .course-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        
+        .course-progress {
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+        
+        .progress-bar {
+            background: #4a5568;
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #4FC3F7;
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .lessons-list {
+            padding: 1rem 0;
+        }
+        
+        .lesson-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .lesson-item:hover {
+            background: #2d3748;
+        }
+        
+        .lesson-item.active {
+            background: #4FC3F7;
+            color: white;
+        }
+        
+        .lesson-item.completed {
+            background: #38a169;
+            color: white;
+        }
+        
+        .lesson-info {
+            flex: 1;
+        }
+        
+        .lesson-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .lesson-duration {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .lesson-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .lesson-status.pending {
+            background: #4a5568;
+            color: #a0aec0;
+        }
+        
+        .lesson-status.completed {
+            background: #38a169;
+            color: white;
+        }
+        
+        .lesson-status.current {
+            background: #4FC3F7;
+            color: white;
+        }
+        
+        .course-header {
+            background: #2d3748;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: #ffffff;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            background: #4a5568;
+            border: none;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .action-btn:hover {
+            background: #4FC3F7;
+            transform: translateY(-1px);
+        }
+        
+        .output-container {
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+            color: #e2e8f0;
+        }
+        
+        @media (max-width: 768px) {
+            .course-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .course-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .course-content {
+                margin-left: 0;
+            }
+            
+            .video-container {
+                min-height: 300px;
+                max-height: 40vh;
+            }
+            
+            .course-info {
+                overflow-y: visible;
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+        
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="course-player">
+    <!-- Sidebar -->
+    <div class="course-sidebar" id="courseSidebar">
+        <div class="sidebar-header">
+            <div class="course-title">
+                <img src="../../img/luminalogonotextblanco.webp" alt="Lumina Logo" class="course-logo">
+                HTML y CSS Avanzado
+            </div>
+            <div class="course-progress">
+                <span id="progressText">0% completado</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="lessons-list" id="lessonsList">
+            <!-- Lecciones se cargan dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="course-content">
+        <!-- Header -->
+        <div class="course-header">
+            <div class="header-left">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div>
+                    <h4 id="currentLessonTitle">Bienvenido al Curso</h4>
+                    <small id="currentLessonDuration">0 min</small>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button class="action-btn" onclick="toggleNotes()">
+                    <i class="fas fa-sticky-note me-1"></i>Notas
+                </button>
+                <a href="../../courses.html" class="action-btn mis-cursos-btn">
+                    <i class="fas fa-graduation-cap me-1"></i>Mis Cursos
+                </a>
+                <button class="action-btn" onclick="toggleBookmark()">
+                    <i class="fas fa-bookmark me-1"></i>Marcar
+                </button>
+                <button class="action-btn" onclick="showHelp()">
+                    <i class="fas fa-question-circle me-1"></i>Ayuda
+                </button>
+            </div>
+        </div>
+
+        <!-- Contenedor de Video -->
+        <div class="video-container">
+            <div class="video-placeholder" id="videoPlaceholder">
+                <i class="fas fa-play-circle"></i>
+                <h3>Video de la Lección</h3>
+                <p>Haz clic en una lección para comenzar</p>
+            </div>
+        </div>
+
+        <!-- Información del Curso -->
+        <div class="course-info">
+            <div id="lessonContent">
+                <div class="lesson-title">Bienvenido a HTML y CSS Avanzado</div>
+                <div class="lesson-description">
+                    Domina las técnicas avanzadas de maquetación y diseño web moderno. 
+                    Aprende a crear interfaces hermosas y responsivas con las últimas tecnologías CSS.
+                </div>
+                
+                <div class="lesson-content">
+                    <h5>¿Qué aprenderás?</h5>
+                    <ul>
+                        <li>Flexbox Avanzado y CSS Grid Layout</li>
+                        <li>Media Queries y Diseño Responsive</li>
+                        <li>Animaciones y Transiciones CSS</li>
+                        <li>Metodologías CSS (BEM, SMACSS)</li>
+                        <li>Preprocesadores (Sass/SCSS)</li>
+                        <li>CSS-in-JS y Frameworks Modernos</li>
+                        <li>Optimización y Performance</li>
+                    </ul>
+                    
+                    <h5>Requisitos</h5>
+                    <ul>
+                        <li>Conocimientos básicos de HTML y CSS</li>
+                        <li>Un editor de código (VS Code recomendado)</li>
+                        <li>Navegador web moderno</li>
+                        <li>Conocimientos básicos de JavaScript (recomendado)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="lesson-navigation">
+                <button class="nav-btn" id="prevBtn" disabled>
+                    <i class="fas fa-chevron-left me-1"></i>Anterior
+                </button>
+                <button class="nav-btn" id="nextBtn" onclick="nextLesson()">
+                    Siguiente<i class="fas fa-chevron-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/auth0-config.js"></script>
+    <script>
+        // Datos del curso
+        const courseData = {
+            id: 2,
+            title: 'HTML y CSS Avanzado',
+            instructor: 'Carlos Ruiz',
+            totalLessons: 20,
+            currentLesson: 0,
+            progress: 0,
+            lessons: [
+                {
+                    id: 1,
+                    title: 'Introducción al Diseño Web Moderno',
+                    duration: '18 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">Introducción al Diseño Web Moderno</div>
+                        <div class="lesson-description">
+                            Explora las tendencias actuales en diseño web y las herramientas que utilizan los profesionales.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>¿Qué es el diseño web moderno?</h5>
+                            <p>El diseño web moderno se centra en la experiencia del usuario, la accesibilidad y el rendimiento. 
+                            Utiliza las últimas tecnologías CSS para crear interfaces intuitivas y atractivas.</p>
+                            
+                            <h5>Principios fundamentales:</h5>
+                            <ul>
+                                <li><strong>Responsive Design:</strong> Adaptación a todos los dispositivos</li>
+                                <li><strong>Mobile First:</strong> Diseño pensado primero para móviles</li>
+                                <li><strong>Performance:</strong> Optimización de velocidad y recursos</li>
+                                <li><strong>Accesibilidad:</strong> Inclusión para todos los usuarios</li>
+                            </ul>
+                            
+                            <h5>Ejemplo de CSS Grid:</h5>
+                            <div class="code-block">
+                                <pre><span class="comment">/* Layout con CSS Grid */</span>
+<span class="selector">.container</span> {
+    <span class="property">display</span>: <span class="value">grid</span>;
+    <span class="property">grid-template-columns</span>: <span class="value">repeat(auto-fit, minmax(300px, 1fr))</span>;
+    <span class="property">gap</span>: <span class="value">2rem</span>;
+    <span class="property">padding</span>: <span class="value">2rem</span>;
+}</pre>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    id: 2,
+                    title: 'Flexbox Avanzado',
+                    duration: '25 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">Flexbox Avanzado</div>
+                        <div class="lesson-description">
+                            Domina las técnicas avanzadas de Flexbox para crear layouts complejos y flexibles.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>Propiedades avanzadas de Flexbox:</h5>
+                            <ul>
+                                <li><strong>flex-grow:</strong> Controla el crecimiento de elementos</li>
+                                <li><strong>flex-shrink:</strong> Controla la reducción de elementos</li>
+                                <li><strong>flex-basis:</strong> Define el tamaño base</li>
+                                <li><strong>align-self:</strong> Alineación individual</li>
+                            </ul>
+                            
+                            <h5>Ejemplo práctico:</h5>
+                            <div class="code-block">
+                                <pre><span class="selector">.flex-container</span> {
+    <span class="property">display</span>: <span class="value">flex</span>;
+    <span class="property">justify-content</span>: <span class="value">space-between</span>;
+    <span class="property">align-items</span>: <span class="value">center</span>;
+    <span class="property">flex-wrap</span>: <span class="value">wrap</span>;
+}
+
+<span class="selector">.flex-item</span> {
+    <span class="property">flex</span>: <span class="value">1 1 200px</span>;
+    <span class="property">margin</span>: <span class="value">0.5rem</span>;
+}</pre>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    id: 3,
+                    title: 'CSS Grid Layout',
+                    duration: '30 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">CSS Grid Layout</div>
+                        <div class="lesson-description">
+                            Aprende a crear layouts complejos y responsivos con CSS Grid, la herramienta más poderosa para maquetación.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>Conceptos fundamentales:</h5>
+                            <ul>
+                                <li><strong>Grid Container:</strong> El elemento padre que define el grid</li>
+                                <li><strong>Grid Items:</strong> Los elementos hijos dentro del grid</li>
+                                <li><strong>Grid Lines:</strong> Las líneas que dividen el grid</li>
+                                <li><strong>Grid Tracks:</strong> Los espacios entre líneas</li>
+                            </ul>
+                            
+                            <h5>Layout de página completa:</h5>
+                            <div class="code-block">
+                                <pre><span class="selector">.page-layout</span> {
+    <span class="property">display</span>: <span class="value">grid</span>;
+    <span class="property">grid-template-areas</span>: 
+        <span class="string">"header header header"
+         "sidebar main aside"
+         "footer footer footer"</span>;
+    <span class="property">grid-template-columns</span>: <span class="value">250px 1fr 200px</span>;
+    <span class="property">grid-template-rows</span>: <span class="value">auto 1fr auto</span>;
+    <span class="property">min-height</span>: <span class="value">100vh</span>;
+}</pre>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    id: 4,
+                    title: 'Animaciones CSS',
+                    duration: '22 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">Animaciones CSS</div>
+                        <div class="lesson-description">
+                            Crea animaciones fluidas y atractivas usando CSS transitions, transforms y keyframes.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>Tipos de animaciones:</h5>
+                            <ul>
+                                <li><strong>Transitions:</strong> Cambios suaves entre estados</li>
+                                <li><strong>Transforms:</strong> Transformaciones 2D y 3D</li>
+                                <li><strong>Keyframes:</strong> Animaciones complejas personalizadas</li>
+                                <li><strong>Animations:</strong> Control de tiempo y repetición</li>
+                            </ul>
+                            
+                            <h5>Ejemplo de animación:</h5>
+                            <div class="code-block">
+                                <pre><span class="keyword">@keyframes</span> <span class="function">slideIn</span> {
+    <span class="keyword">from</span> {
+        <span class="property">transform</span>: <span class="function">translateX</span>(<span class="value">-100%</span>);
+        <span class="property">opacity</span>: <span class="value">0</span>;
+    }
+    <span class="keyword">to</span> {
+        <span class="property">transform</span>: <span class="function">translateX</span>(<span class="value">0</span>);
+        <span class="property">opacity</span>: <span class="value">1</span>;
+    }
+}
+
+<span class="selector">.animated-element</span> {
+    <span class="property">animation</span>: <span class="value">slideIn 0.5s ease-out</span>;
+}</pre>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    id: 5,
+                    title: 'Sass y SCSS',
+                    duration: '28 min',
+                    type: 'video',
+                    content: `
+                        <div class="lesson-title">Sass y SCSS</div>
+                        <div class="lesson-description">
+                            Descubre el poder de los preprocesadores CSS para escribir código más mantenible y eficiente.
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h5>Características principales:</h5>
+                            <ul>
+                                <li><strong>Variables:</strong> Reutilización de valores</li>
+                                <li><strong>Nesting:</strong> Anidamiento de selectores</li>
+                                <li><strong>Mixins:</strong> Bloques de código reutilizables</li>
+                                <li><strong>Functions:</strong> Operaciones y cálculos</li>
+                            </ul>
+                            
+                            <h5>Ejemplo con SCSS:</h5>
+                            <div class="code-block">
+                                <pre><span class="comment">// Variables</span>
+<span class="variable">$primary-color</span>: <span class="value">#3498db</span>;
+<span class="variable">$border-radius</span>: <span class="value">8px</span>;
+
+<span class="comment">// Mixin</span>
+<span class="keyword">@mixin</span> <span class="function">button-style</span> {
+    <span class="property">padding</span>: <span class="value">12px 24px</span>;
+    <span class="property">border-radius</span>: <span class="variable">$border-radius</span>;
+    <span class="property">border</span>: <span class="value">none</span>;
+    <span class="property">cursor</span>: <span class="value">pointer</span>;
+    <span class="property">transition</span>: <span class="value">all 0.3s ease</span>;
+}
+
+<span class="selector">.btn-primary</span> {
+    <span class="keyword">@include</span> <span class="function">button-style</span>;
+    <span class="property">background-color</span>: <span class="variable">$primary-color</span>;
+    <span class="property">color</span>: <span class="value">white</span>;
+}</pre>
+                            </div>
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        // Variables globales
+        let currentLessonIndex = 0;
+        let completedLessons = new Set();
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLessons();
+            updateProgress();
+            loadLesson(currentLessonIndex);
+        });
+
+        // Cargar lista de lecciones
+        function loadLessons() {
+            const lessonsList = document.getElementById('lessonsList');
+            lessonsList.innerHTML = '';
+
+            courseData.lessons.forEach((lesson, index) => {
+                const lessonItem = document.createElement('div');
+                lessonItem.className = `lesson-item ${index === currentLessonIndex ? 'active' : ''} ${completedLessons.has(lesson.id) ? 'completed' : ''}`;
+                lessonItem.onclick = () => loadLesson(index);
+
+                lessonItem.innerHTML = `
+                    <div class="lesson-info">
+                        <div class="lesson-name">${lesson.title}</div>
+                        <div class="lesson-duration">${lesson.duration}</div>
+                    </div>
+                    <div class="lesson-status ${completedLessons.has(lesson.id) ? 'completed' : index === currentLessonIndex ? 'current' : 'pending'}">
+                        ${completedLessons.has(lesson.id) ? '✓' : index + 1}
+                    </div>
+                `;
+
+                lessonsList.appendChild(lessonItem);
+            });
+        }
+
+        // Cargar lección específica
+        function loadLesson(index) {
+            if (index < 0 || index >= courseData.lessons.length) return;
+
+            currentLessonIndex = index;
+            const lesson = courseData.lessons[index];
+
+            // Actualizar título y duración
+            document.getElementById('currentLessonTitle').textContent = lesson.title;
+            document.getElementById('currentLessonDuration').textContent = lesson.duration;
+
+            // Actualizar contenido
+            document.getElementById('lessonContent').innerHTML = lesson.content;
+
+            // Actualizar lista de lecciones
+            loadLessons();
+
+            // Actualizar botones de navegación
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === courseData.lessons.length - 1;
+        }
+
+        // Siguiente lección
+        function nextLesson() {
+            if (currentLessonIndex < courseData.lessons.length - 1) {
+                completedLessons.add(courseData.lessons[currentLessonIndex].id);
+                loadLesson(currentLessonIndex + 1);
+                updateProgress();
+            }
+        }
+
+        // Lección anterior
+        function prevLesson() {
+            if (currentLessonIndex > 0) {
+                loadLesson(currentLessonIndex - 1);
+            }
+        }
+
+        // Actualizar progreso
+        function updateProgress() {
+            const progress = (completedLessons.size / courseData.lessons.length) * 100;
+            document.getElementById('progressText').textContent = `${Math.round(progress)}% completado`;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        // Funciones auxiliares
+        function toggleNotes() {
+            alert('Funcionalidad de notas próximamente disponible');
+        }
+
+        function toggleBookmark() {
+            alert('Funcionalidad de marcadores próximamente disponible');
+        }
+
+        function showHelp() {
+            alert('Centro de ayuda próximamente disponible');
+        }
+
+        // Toggle sidebar en móviles
+        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+            document.getElementById('courseSidebar').classList.toggle('open');
+        });
+    </script>
+</body>
+</html>

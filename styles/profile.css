@@ -1,0 +1,549 @@
+/* ==================== */
+/* PROFILE PAGE STYLES */
+/* ==================== */
+
+/* Override específico para la página de perfil */
+body.profile-page {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    background-size: auto !important;
+    background-position: auto !important;
+    background-attachment: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+}
+
+/* Forzar override del main-content para profile-page */
+body.profile-page .main-content {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Sección blanca principal */
+.profile-white-section {
+    background-color: #ffffff !important;
+    padding: 76px 0 0 0 !important;
+    min-height: calc(100vh - 76px) !important;
+    position: relative;
+    margin: 0 !important;
+}
+
+.profile-white-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+/* Ajustar el container dentro de la sección blanca */
+.profile-white-section .container {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+/* Profile Header */
+.profile-header {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #000000;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-avatar-icon {
+    font-size: 8rem;
+    color: #6366f1;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 1rem;
+    right: 0;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.avatar-edit-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.profile-info {
+    padding-left: 1rem;
+}
+
+.profile-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.profile-email {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.profile-badge {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Métricas del Usuario */
+.metric-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #000000;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    border-color: #000000;
+}
+
+.metric-icon {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.metric-content {
+    flex: 1;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Profile Sections */
+.profile-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    border: 1px solid #000000;
+}
+
+.profile-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    border-color: #000000;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-title i {
+    color: #6366f1;
+}
+
+/* Profile Details */
+.profile-details {
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #000000;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control-plaintext {
+    color: #1f2937;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 0;
+}
+
+/* Activity List */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+    border: 1px solid #000000;
+    transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+    background: #f3f4f6;
+    transform: translateX(5px);
+}
+
+.activity-icon {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-text {
+    margin: 0 0 0.25rem 0;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.activity-time {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.quick-action-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    border: 1px solid #000000;
+    font-weight: 500;
+}
+
+.quick-action-item:hover {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.quick-action-item i {
+    color: #6366f1;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    margin-right: 0.75rem;
+}
+
+.quick-action-item:hover i {
+    color: white;
+}
+
+/* Security Status */
+.security-status {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    border: 1px solid #000000;
+    transition: all 0.3s ease;
+}
+
+.security-item:hover {
+    background: #f3f4f6;
+    transform: translateX(5px);
+}
+
+.security-item i {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+}
+
+.security-item span {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: #6b7280;
+    border: 1px solid #d1d5db;
+}
+
+.btn-outline-secondary:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-name {
+        font-size: 2rem;
+    }
+    
+    .profile-section {
+        padding: 1.5rem;
+    }
+    
+    .metric-card {
+        padding: 1rem;
+    }
+    
+    .metric-icon {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.2rem;
+    }
+    
+    .metric-value {
+        font-size: 1.5rem;
+    }
+    
+    .profile-avatar-icon {
+        font-size: 6rem;
+    }
+    
+    .profile-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .activity-item {
+        padding: 0.75rem;
+    }
+    
+    .quick-action-item {
+        padding: 0.75rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-section {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.metric-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.metric-card:nth-child(1) { animation-delay: 0.1s; }
+.metric-card:nth-child(2) { animation-delay: 0.2s; }
+.metric-card:nth-child(3) { animation-delay: 0.3s; }
+.metric-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Hover Effects */
+.metric-card:hover .metric-icon {
+    transform: scale(1.1);
+}
+
+.activity-item:hover .activity-icon {
+    transform: scale(1.1);
+}
+
+.quick-action-item:hover {
+    transform: translateY(-2px);
+}
+
+/* Profile Avatar Animation */
+.profile-avatar-icon {
+    transition: all 0.3s ease;
+}
+
+.profile-avatar-container:hover .profile-avatar-icon {
+    transform: scale(1.05);
+}
+
+/* Security Status Colors */
+.security-item .text-success {
+    color: #10b981 !important;
+}
+
+.security-item .text-warning {
+    color: #f59e0b !important;
+}
+
+.security-item .text-danger {
+    color: #ef4444 !important;
+}
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.breadcrumb-item a:hover {
+    color: #4f46e5;
+}
+
+.breadcrumb-item.active {
+    color: #6b7280;
+}
+
+/* Form Control Plaintext Enhancement */
+.form-control-plaintext:last-child {
+    border-bottom: none;
+}
+
+/* Profile Badge Enhancement */
+.profile-badge i {
+    margin-right: 0.5rem;
+}
+
+/* Quick Action Enhancement */
+.quick-action-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Activity Enhancement */
+.activity-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Security Item Enhancement */
+.security-item:last-child {
+    margin-bottom: 0;
+} 

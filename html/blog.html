@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Lumina LMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="../styles/main.css" rel="stylesheet">
+    <link href="../styles/unified-styles.css" rel="stylesheet">
+    <link href="../styles/blog.css" rel="stylesheet">
+    </head>
+<body class="blog-page">
+    <style>
+        /* Estilos temporales para forzar aplicación */
+        body.blog-page {
+            background-color: #ffffff !important;
+            background-image: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        body.blog-page .main-content {
+            background-color: #ffffff !important;
+            background-image: none !important;
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+        .blog-white-section {
+            background-color: #ffffff !important;
+            padding: 76px 0 0 0 !important;
+            margin: 0 !important;
+        }
+    </style>
+    <!-- Toast para notificaciones -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">¡Añadido al carrito!</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                El curso ha sido añadido a tu carrito de compras.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
+                    </li>
+                    <!-- Botón Mis Cursos (solo para estudiantes) -->
+                    <li class="nav-item" id="misCursosContainer" style="display: none;">
+                        <a class="nav-link mis-cursos-btn" href="courses.html">
+                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" aria-label="Notificaciones">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    </li>
+
+                    <!-- Dropdown del Carrito -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span id="cartCount"
+                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
+                            <li>
+                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider my-1">
+                            </li>
+                            <li>
+                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
+                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
+                                </div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider my-1">
+                            </li>
+                            <li class="px-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>Subtotal:</strong>
+                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
+                                </div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider my-1">
+                            </li>
+                            <li class="px-2 mb-1">
+                                <a href="checkout.html" class="btn btn-primary w-100 py-2">
+                                    Ir a pagar
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Dropdown del Usuario -->
+                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
+                            <span id="userName">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <div class="dropdown-header">
+                                    <div class="d-flex align-items-center">
+                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
+                                        <div>
+                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
+                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
+                            <li><a class="dropdown-item" href="courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Botón de Login (cuando no está autenticado) -->
+                    <li class="nav-item" id="loginButtonContainer">
+                        <a class="nav-link" href="login.html">
+                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="blog-white-section">
+            <div class="container py-5">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Blog</li>
+                    </ol>
+                </nav>
+
+                <!-- Blog Header -->
+                <div class="blog-header mb-5">
+                    <h1 class="blog-title">
+                        <i class="fas fa-blog me-2"></i> Blog de Lumina Learning
+                    </h1>
+                    <p class="blog-subtitle">Descubre las últimas noticias, tendencias y consejos sobre educación en línea y tecnología.</p>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="blog-controls mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3">
+                            <div class="search-box">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Buscar artículos...">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="filter-controls">
+                                <select class="form-select" id="categoryFilter">
+                                    <option value="">Todas las categorías</option>
+                                    <option value="tecnologia">Tecnología</option>
+                                    <option value="educacion">Educación</option>
+                                    <option value="tendencias">Tendencias</option>
+                                    <option value="consejos">Consejos</option>
+                                    <option value="eventos">Eventos</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- Blog Posts -->
+                    <div class="col-lg-8 mb-4">
+                        <!-- Featured Post -->
+                        <article class="blog-card featured-post">
+                            <div class="post-image">
+                                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Inteligencia Artificial en Educación" class="img-fluid">
+                                <div class="post-category">Tecnología</div>
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="post-date"><i class="fas fa-calendar me-1"></i>15 de Enero, 2024</span>
+                                    <span class="post-author"><i class="fas fa-user me-1"></i>Dr. Ana García</span>
+                                    <span class="post-read-time"><i class="fas fa-clock me-1"></i>8 min lectura</span>
+                                </div>
+                                <h2 class="post-title">El Futuro de la Educación: Inteligencia Artificial y Aprendizaje Personalizado</h2>
+                                <p class="post-excerpt">
+                                    La inteligencia artificial está revolucionando la forma en que aprendemos. Descubre cómo las tecnologías de IA están creando experiencias de aprendizaje más personalizadas y efectivas para estudiantes de todas las edades.
+                                </p>
+                                <div class="post-tags">
+                                    <span class="tag">IA</span>
+                                    <span class="tag">Educación</span>
+                                    <span class="tag">Tecnología</span>
+                                    <span class="tag">Futuro</span>
+                                </div>
+                                <a href="#" class="btn btn-primary read-more-btn">
+                                    <i class="fas fa-arrow-right me-1"></i> Leer Artículo Completo
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Regular Posts -->
+                        <div class="blog-posts">
+                            <article class="blog-card">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="post-image">
+                                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Trabajo en Equipo" class="img-fluid">
+                                            <div class="post-category">Educación</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="post-content">
+                                            <div class="post-meta">
+                                                <span class="post-date"><i class="fas fa-calendar me-1"></i>12 de Enero, 2024</span>
+                                                <span class="post-author"><i class="fas fa-user me-1"></i>Prof. Carlos Ruiz</span>
+                                            </div>
+                                            <h3 class="post-title">Cómo Fomentar el Trabajo en Equipo en Entornos Virtuales</h3>
+                                            <p class="post-excerpt">
+                                                El aprendizaje colaborativo en línea presenta desafíos únicos. Te compartimos estrategias probadas para crear experiencias de trabajo en equipo efectivas en plataformas digitales.
+                                            </p>
+                                            <div class="post-tags">
+                                                <span class="tag">Colaboración</span>
+                                                <span class="tag">Online</span>
+                                            </div>
+                                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                                Leer más
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="blog-card">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="post-image">
+                                            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Productividad" class="img-fluid">
+                                            <div class="post-category">Consejos</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="post-content">
+                                            <div class="post-meta">
+                                                <span class="post-date"><i class="fas fa-calendar me-1"></i>10 de Enero, 2024</span>
+                                                <span class="post-author"><i class="fas fa-user me-1"></i>María López</span>
+                                            </div>
+                                            <h3 class="post-title">10 Técnicas de Estudio que Triplicarán tu Productividad</h3>
+                                            <p class="post-excerpt">
+                                                Descubre métodos científicamente probados para mejorar tu concentración, retención de información y eficiencia en el estudio. Aplica estas técnicas y verás resultados inmediatos.
+                                            </p>
+                                            <div class="post-tags">
+                                                <span class="tag">Productividad</span>
+                                                <span class="tag">Estudio</span>
+                                            </div>
+                                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                                Leer más
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="blog-card">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="post-image">
+                                            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Tendencias" class="img-fluid">
+                                            <div class="post-category">Tendencias</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="post-content">
+                                            <div class="post-meta">
+                                                <span class="post-date"><i class="fas fa-calendar me-1"></i>8 de Enero, 2024</span>
+                                                <span class="post-author"><i class="fas fa-user me-1"></i>Laura Sánchez</span>
+                                            </div>
+                                            <h3 class="post-title">Las Tendencias de eLearning que Dominarán 2024</h3>
+                                            <p class="post-excerpt">
+                                                Desde la realidad virtual hasta el microaprendizaje, conoce las tecnologías y metodologías que están transformando la educación en línea este año.
+                                            </p>
+                                            <div class="post-tags">
+                                                <span class="tag">eLearning</span>
+                                                <span class="tag">2024</span>
+                                            </div>
+                                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                                Leer más
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="blog-card">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="post-image">
+                                            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Eventos" class="img-fluid">
+                                            <div class="post-category">Eventos</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="post-content">
+                                            <div class="post-meta">
+                                                <span class="post-date"><i class="fas fa-calendar me-1"></i>5 de Enero, 2024</span>
+                                                <span class="post-author"><i class="fas fa-user me-1"></i>Equipo Lumina</span>
+                                            </div>
+                                            <h3 class="post-title">Conferencia Internacional de Educación Digital 2024</h3>
+                                            <p class="post-excerpt">
+                                                Únete a nosotros en la conferencia más importante del año sobre educación digital. Expertos internacionales compartirán las últimas innovaciones y mejores prácticas.
+                                            </p>
+                                            <div class="post-tags">
+                                                <span class="tag">Conferencia</span>
+                                                <span class="tag">Evento</span>
+                                            </div>
+                                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                                Leer más
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Navegación de páginas" class="blog-pagination">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="col-lg-4">
+                        <!-- Categories -->
+                        <div class="blog-sidebar-card mb-4">
+                            <h3 class="sidebar-title">
+                                <i class="fas fa-folder me-2"></i> Categorías
+                            </h3>
+                            <div class="category-list">
+                                <a href="#" class="category-item" data-category="tecnologia">
+                                    <span class="category-name">Tecnología</span>
+                                    <span class="category-count">12</span>
+                                </a>
+                                <a href="#" class="category-item" data-category="educacion">
+                                    <span class="category-name">Educación</span>
+                                    <span class="category-count">8</span>
+                                </a>
+                                <a href="#" class="category-item" data-category="tendencias">
+                                    <span class="category-name">Tendencias</span>
+                                    <span class="category-count">6</span>
+                                </a>
+                                <a href="#" class="category-item" data-category="consejos">
+                                    <span class="category-name">Consejos</span>
+                                    <span class="category-count">15</span>
+                                </a>
+                                <a href="#" class="category-item" data-category="eventos">
+                                    <span class="category-name">Eventos</span>
+                                    <span class="category-count">4</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Popular Posts -->
+                        <div class="blog-sidebar-card mb-4">
+                            <h3 class="sidebar-title">
+                                <i class="fas fa-fire me-2"></i> Artículos Populares
+                            </h3>
+                            <div class="popular-posts">
+                                <div class="popular-post-item">
+                                    <div class="post-thumbnail">
+                                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Post thumbnail">
+                                    </div>
+                                    <div class="post-info">
+                                        <h5>IA en Educación: Lo que Necesitas Saber</h5>
+                                        <small>2.5k vistas • 3 días</small>
+                                    </div>
+                                </div>
+                                <div class="popular-post-item">
+                                    <div class="post-thumbnail">
+                                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Post thumbnail">
+                                    </div>
+                                    <div class="post-info">
+                                        <h5>Trabajo en Equipo Virtual</h5>
+                                        <small>1.8k vistas • 1 semana</small>
+                                    </div>
+                                </div>
+                                <div class="popular-post-item">
+                                    <div class="post-thumbnail">
+                                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Post thumbnail">
+                                    </div>
+                                    <div class="post-info">
+                                        <h5>Técnicas de Estudio Efectivas</h5>
+                                        <small>3.2k vistas • 2 semanas</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Newsletter -->
+                        <div class="blog-sidebar-card mb-4">
+                            <h3 class="sidebar-title">
+                                <i class="fas fa-envelope me-2"></i> Newsletter
+                            </h3>
+                            <p class="newsletter-text">Suscríbete para recibir las últimas noticias y artículos directamente en tu email.</p>
+                            <form class="newsletter-form">
+                                <div class="mb-3">
+                                    <input type="email" class="form-control" placeholder="Tu email" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-paper-plane me-1"></i> Suscribirse
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="blog-sidebar-card">
+                            <h3 class="sidebar-title">
+                                <i class="fas fa-tags me-2"></i> Tags Populares
+                            </h3>
+                            <div class="tag-cloud">
+                                <a href="#" class="tag-item">Educación</a>
+                                <a href="#" class="tag-item">Tecnología</a>
+                                <a href="#" class="tag-item">IA</a>
+                                <a href="#" class="tag-item">Online</a>
+                                <a href="#" class="tag-item">Aprendizaje</a>
+                                <a href="#" class="tag-item">Productividad</a>
+                                <a href="#" class="tag-item">Innovación</a>
+                                <a href="#" class="tag-item">Futuro</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/footer-utils.js"></script>
+    <script src="../js/auth0-config.js"></script>
+    <script>
+        // Objeto del carrito
+        const cart = {
+            items: [],
+            total: 0,
+
+            addItem: function (item) {
+                const existingItem = this.items.find(cartItem => cartItem.id === item.id);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    this.items.push({ ...item, quantity: 1 });
+                }
+                this.calculateTotal();
+                this.updateUI();
+                this.saveToLocalStorage();
+
+                // Mostrar toast
+                const toast = new bootstrap.Toast(document.getElementById('addedToCartToast'));
+                toast.show();
+            },
+
+            removeItem: function (id) {
+                // Convertir id a string para comparación consistente
+                const itemId = String(id);
+                this.items = this.items.filter(item => String(item.id) !== itemId);
+                this.calculateTotal();
+                this.updateUI();
+                this.saveToLocalStorage();
+            },
+
+            calculateTotal: function () {
+                this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            },
+
+            updateUI: function () {
+                // Actualizar contador
+                const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
+                document.getElementById('cartCount').textContent = totalItems;
+
+                // Actualizar lista de items
+                const cartItemsContainer = document.getElementById('cartItems');
+                cartItemsContainer.innerHTML = '';
+
+                if (this.items.length === 0) {
+                    cartItemsContainer.innerHTML = '<p class="text-muted text-center py-2">Tu carrito está vacío</p>';
+                } else {
+                    this.items.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'cart-item d-flex justify-content-between align-items-center py-2';
+                        itemElement.innerHTML = `
+                            <img src="${item.image}" class="cart-item-img rounded" width="40" height="40" alt="${item.title}">
+                            <div class="flex-grow-1 mx-3">
+                                <div class="cart-item-title">${item.title}</div>
+                                <small class="text-muted">${item.quantity} x $${item.price.toFixed(2)}</small>
+                            </div>
+                            <span class="cart-item-price fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
+                            <button class="btn btn-sm btn-outline-danger remove-item ms-2" data-id="${item.id}" aria-label="Eliminar">
+                                &times;
+                            </button>
+                        `;
+                        cartItemsContainer.appendChild(itemElement);
+                    });
+                }
+
+                // Actualizar subtotal
+                document.getElementById('cartSubtotal').textContent = `$${this.total.toFixed(2)}`;
+            },
+
+            saveToLocalStorage: function () {
+                localStorage.setItem('shoppingCart', JSON.stringify(this.items));
+            },
+
+            loadFromLocalStorage: function () {
+                const savedCart = localStorage.getItem('shoppingCart');
+                if (savedCart) {
+                    this.items = JSON.parse(savedCart);
+                    this.calculateTotal();
+                    this.updateUI();
+                }
+            },
+
+            init: function () {
+                this.loadFromLocalStorage();
+
+                // Delegación de eventos para los botones de eliminar
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('remove-item')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const itemId = e.target.getAttribute('data-id');
+                        if (itemId) {
+                            this.removeItem(itemId);
+                        }
+                    }
+                });
+            }
+        };
+
+        // Inicializar el carrito
+        cart.init();
+
+        // Verificar autenticación y actualizar navbar
+        async function checkAuthAndUpdateNavbar() {
+            try {
+                await Auth0Service.initialize();
+                const isAuthenticated = await Auth0Service.isAuthenticated();
+                
+                if (isAuthenticated) {
+                    const user = await Auth0Service.getUser();
+                    updateUserNavbar(user);
+                } else {
+                    showLoginButton();
+                }
+            } catch (error) {
+                console.error('Error verificando autenticación:', error);
+                showLoginButton();
+            }
+        }
+
+        function updateUserNavbar(user) {
+            // Ocultar botón de login
+            document.getElementById('loginButtonContainer').style.display = 'none';
+            
+            // Mostrar dropdown del usuario
+            const userContainer = document.getElementById('userDropdownContainer');
+            userContainer.style.display = 'block';
+            
+            // Actualizar información del usuario
+            const userName = user.name || user.email.split('@')[0];
+            const userEmail = user.email;
+            
+            // Determinar el rol del usuario
+            let userRole = 'student';
+            if (userEmail === 'admin@gmail.com') {
+                userRole = 'admin';
+            } else if (userEmail === 'profesor@gmail.com') {
+                userRole = 'teacher';
+            } else if (userEmail === 'estudiante@gmail.com') {
+                userRole = 'student';
+            } else {
+                userRole = user.role || 'student';
+            }
+            
+            // Avatar basado en el rol usando íconos
+            let avatarIcon = 'fa-user-circle';
+            if (userRole === 'admin') {
+                avatarIcon = 'fa-user-shield';
+            } else if (userRole === 'teacher') {
+                avatarIcon = 'fa-chalkboard-teacher';
+            } else {
+                avatarIcon = 'fa-user-graduate';
+            }
+            
+            // Actualizar elementos del navbar
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('userNameLarge').textContent = userName;
+            document.getElementById('userEmail').textContent = userEmail;
+            document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
+            document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
+            
+            // Mostrar/ocultar botón "Mis Cursos" según el rol
+            const misCursosContainer = document.getElementById('misCursosContainer');
+            if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
+                misCursosContainer.style.display = 'block';
+                console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
+            } else {
+                misCursosContainer.style.display = 'none';
+                console.log('Ocultando botón Mis Cursos para rol:', userRole);
+            }
+            
+            // Inicializar carrito para usuarios autenticados
+            if (window.cart && typeof window.cart.init === 'function') {
+                window.cart.init();
+            }
+        }
+
+        function showLoginButton() {
+            // Mostrar botón de login
+            document.getElementById('loginButtonContainer').style.display = 'block';
+            
+            // Ocultar dropdown del usuario
+            document.getElementById('userDropdownContainer').style.display = 'none';
+
+            // Ocultar botón "Mis Cursos"
+            document.getElementById('misCursosContainer').style.display = 'none';
+        }
+
+        // Función para manejar el logout
+        function handleLogout() {
+            Auth0Service.logout();
+            showLoginButton();
+            window.location.href = '../index.html';
+        }
+
+        // Inicializar verificación de autenticación
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthAndUpdateNavbar();
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <img src="../img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
+                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
+                    <div class="mt-2">
+                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-3">
+                    <h6>Enlaces</h6>
+                    <a href="../index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
+                    <a href="cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
+                    <a href="blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
+                    <a href="contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-3">
+                    <h6>Mi cuenta</h6>
+                    <a href="courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
+                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
+                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
+                    <a href="profile.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
+                </div>
+
+                <div class="col-lg-4 mb-3">
+                    <h6>Contacto</h6>
+                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> info@lumina.edu</p>
+                    <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
