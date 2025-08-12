@@ -670,9 +670,8 @@
 
                 <div class="col-lg-4 mb-3">
                     <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
                     <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> info@lumina.edu</p>
+                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> luminalearning.mx@gmail.com</p>
                     <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
                 </div>
             </div>
@@ -688,8 +687,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/auth0-config.js"></script>
-    <script src="../js/courses.js" defer></script>
+    <script src="../js/courses.js"></script>
     <script>
+        // Verificar que todos los scripts estén cargados
+        console.log('=== VERIFICACIÓN DE SCRIPTS ===');
+        console.log('Bootstrap disponible:', typeof bootstrap !== 'undefined');
+        console.log('Chart.js disponible:', typeof Chart !== 'undefined');
+        console.log('Auth0Service disponible:', typeof Auth0Service !== 'undefined');
+        console.log('courses.js disponible:', typeof courses !== 'undefined');
+        
+        // Log básico para verificar que este script se ejecuta
+        console.log('=== SCRIPT DE AUTENTICACIÓN CARGADO ===');
+    </script>
+    <script>
+        console.log('=== INICIO DEL SCRIPT PRINCIPAL ===');
+        
         // Objeto del carrito de compras
         const cart = {
             items: [],
@@ -794,28 +806,77 @@
         // Verificar autenticación y actualizar navbar
         async function checkAuthAndUpdateNavbar() {
             try {
+                console.log('=== INICIO VERIFICACIÓN DE AUTENTICACIÓN ===');
+                
+                // Verificar localStorage directamente primero
+                const storedUser = localStorage.getItem('user');
+                const storedToken = localStorage.getItem('authToken');
+                console.log('localStorage - user:', storedUser);
+                console.log('localStorage - token:', storedToken);
+                
+                if (storedUser && storedToken) {
+                    console.log('Hay datos en localStorage, usando directamente');
+                    const user = JSON.parse(storedUser);
+                    console.log('Usuario parseado:', user);
+                    updateUserNavbar(user);
+                    return;
+                }
+                
+                console.log('No hay datos en localStorage, verificando Auth0Service...');
                 await Auth0Service.initialize();
                 const isAuthenticated = await Auth0Service.isAuthenticated();
+                console.log('Auth0Service.isAuthenticated():', isAuthenticated);
                 
                 if (isAuthenticated) {
                     const user = await Auth0Service.getUser();
+                    console.log('Usuario de Auth0Service:', user);
                     updateUserNavbar(user);
                 } else {
+                    console.log('No autenticado, mostrando botón de login');
                     showLoginButton();
                 }
             } catch (error) {
                 console.error('Error verificando autenticación:', error);
-                showLoginButton();
+                console.log('Verificando localStorage como fallback...');
+                
+                const storedUser = localStorage.getItem('user');
+                const storedToken = localStorage.getItem('authToken');
+                
+                if (storedUser && storedToken) {
+                    console.log('Usando localStorage como fallback');
+                    const user = JSON.parse(storedUser);
+                    updateUserNavbar(user);
+                } else {
+                    console.log('No hay datos de autenticación disponibles');
+                    showLoginButton();
+                }
             }
         }
 
         function updateUserNavbar(user) {
+            console.log('=== ACTUALIZANDO NAVBAR ===');
+            console.log('Usuario recibido:', user);
+            
+            // Verificar que los elementos existan
+            const loginButton = document.getElementById('loginButtonContainer');
+            const userContainer = document.getElementById('userDropdownContainer');
+            
+            console.log('Elementos encontrados:');
+            console.log('- loginButtonContainer:', !!loginButton);
+            console.log('- userDropdownContainer:', !!userContainer);
+            
+            if (!loginButton || !userContainer) {
+                console.error('Elementos críticos del navbar no encontrados');
+                return;
+            }
+            
             // Ocultar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'none';
+            loginButton.style.display = 'none';
+            console.log('Botón de login ocultado');
             
             // Mostrar dropdown del usuario
-            const userContainer = document.getElementById('userDropdownContainer');
             userContainer.style.display = 'block';
+            console.log('Dropdown del usuario mostrado');
             
             // Actualizar información del usuario
             const userName = user.name || user.email.split('@')[0];
@@ -860,10 +921,12 @@
                 console.log('Ocultando botón Mis Cursos para rol:', userRole);
             }
             
-            // Inicializar el carrito para usuarios autenticados
+            // Inicializar carrito para usuarios autenticados
             if (window.cart && typeof window.cart.init === 'function') {
                 window.cart.init();
             }
+            
+            console.log('=== NAVBAR ACTUALIZADO COMPLETAMENTE ===');
         }
 
         function showLoginButton() {
@@ -886,11 +949,25 @@
 
         // Inicializar verificación de autenticación
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthAndUpdateNavbar();
+            console.log('=== DOM CONTENT LOADED ===');
+            console.log('Auth0Service disponible:', typeof Auth0Service !== 'undefined');
             
-            // Inicializar efectos de números luminosos
+            if (typeof Auth0Service === 'undefined') {
+                console.error('Auth0Service no está disponible en DOMContentLoaded');
+                return;
+            }
+            
+            console.log('Ejecutando verificación de autenticación...');
+            checkAuthAndUpdateNavbar();
+        });
+        
+        // Inicializar efectos de números luminosos
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== INICIALIZANDO EFECTOS VISUALES ===');
             initializeGlowingNumbers();
         });
+        
+        console.log('=== FIN DEL SCRIPT PRINCIPAL ===');
         
         // Función para efectos de números luminosos
         function initializeGlowingNumbers() {

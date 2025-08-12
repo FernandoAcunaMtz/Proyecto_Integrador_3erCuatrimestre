@@ -11,7 +11,7 @@ const apiRoutes = require('./routes/api');
 const chatbotRoutes = require('./routes/chatbot');
 
 const app = express();
-const PORT = process.env.PORT || 5502;
+const PORT = process.env.PORT || 5501; // Cambiado a 5501
 
 // Middleware de seguridad
 app.use(helmet({

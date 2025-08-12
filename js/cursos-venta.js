@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: "Aprende a crear aplicaciones web completas con las tecnologías más demandadas del mercado: HTML, CSS, JavaScript, React, Node.js y más.",
             features: ["Certificado", "50+ videos", "Proyectos prácticos"],
             originalPrice: 799,
-            currentPrice: 599,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "programacion",
             popularity: 95
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: "Domina las últimas estrategias de marketing digital, SEO, redes sociales, email marketing y análisis de datos para posicionar tu marca.",
             features: ["Certificado", "35+ videos", "Casos de estudio"],
             originalPrice: 649,
-            currentPrice: 499,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "marketing",
             popularity: 88
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: "Aprende a invertir de manera inteligente y haz crecer tu capital con estrategias comprobadas de gestión de riesgos y diversificación.",
             features: ["Certificado", "25+ videos", "Herramientas"],
             originalPrice: 399,
-            currentPrice: 399,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "finanzas",
             popularity: 82
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: "Descubre el revolucionario método Meta-finance® para maximizar tus ganancias financieras con estrategias de trading avanzadas.",
             features: ["Certificado", "40+ videos", "Comunidad VIP"],
             originalPrice: 899,
-            currentPrice: 699,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "finanzas",
             popularity: 90
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: "Aprende a crear interfaces intuitivas y experiencias de usuario excepcionales con las mejores prácticas de UX/UI design.",
             features: ["Certificado", "30+ videos", "Portfolio"],
             originalPrice: 549,
-            currentPrice: 449,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "diseno",
             popularity: 85
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: "Domina Python para análisis de datos, machine learning y visualización con pandas, numpy, matplotlib y scikit-learn.",
             features: ["Certificado", "45+ videos", "Datasets reales"],
             originalPrice: 699,
-            currentPrice: 549,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "programacion",
             popularity: 92
@@ -221,6 +221,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.updateUI();
                 console.log('Carrito limpiado');
             };
+
+            // Limpiar carrito automáticamente al cargar la página para evitar precios antiguos
+            this.clearStorage();
 
             // Delegación de eventos para los botones del carrito (mantener como respaldo)
             document.addEventListener('click', (e) => {

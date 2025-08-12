@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Aprende desarrollo web completo desde cero hasta crear aplicaciones modernas.",
             features: ["Certificado", "50+ videos", "Proyectos prácticos"],
             originalPrice: 799,
-            currentPrice: 599,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "programacion",
             popularity: 95
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Domina las estrategias de marketing digital para hacer crecer tu negocio.",
             features: ["Certificado", "35+ videos", "Casos de estudio"],
             originalPrice: 649,
-            currentPrice: 499,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1557838923-2985c318be48?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "marketing",
             popularity: 88
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Crea experiencias de usuario excepcionales con las mejores herramientas de diseño.",
             features: ["Certificado", "40+ videos", "Kit de recursos"],
             originalPrice: 749,
-            currentPrice: 549,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "diseno",
             popularity: 92
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Sumérgete en el mundo de la ciencia de datos y machine learning con Python.",
             features: ["Certificado", "60+ videos", "Datasets reales"],
             originalPrice: 899,
-            currentPrice: 699,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "programacion",
             popularity: 90
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Captura momentos increíbles y domina las técnicas de edición profesional.",
             features: ["Certificado", "45+ videos", "Presets gratuitos"],
             originalPrice: 549,
-            currentPrice: 449,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "diseno",
             popularity: 85
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: "Domina Python para análisis de datos, machine learning y visualización con pandas, numpy, matplotlib y scikit-learn.",
             features: ["Certificado", "45+ videos", "Datasets reales"],
             originalPrice: 699,
-            currentPrice: 549,
+            currentPrice: 349,
             image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             category: "programacion",
             popularity: 92

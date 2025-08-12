@@ -247,7 +247,7 @@ function getFallbackResponse(userMessage, currentPage, userRole) {
 }
 
 // Endpoint principal del chatbot
-router.post('/api', async (req, res) => {
+router.post('/chat', async (req, res) => {
     try {
         const { message, currentPage, userRole, chatHistory } = req.body;
         

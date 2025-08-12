@@ -817,17 +817,27 @@ function updateStats() {
     const inProgressCourses = courses.filter(c => c.progress > 0 && c.progress < 100).length;
     const totalProgress = Math.round(courses.reduce((sum, c) => sum + c.progress, 0) / totalCourses);
     
-    // Actualizar estadísticas en el hero
-    document.getElementById('totalCourses').textContent = totalCourses;
-    document.getElementById('totalProgress').textContent = `${totalProgress}%`;
-    document.getElementById('totalHours').textContent = `${courses.reduce((sum, c) => sum + parseInt(c.duration), 0)}h`;
+    // Actualizar estadísticas en el hero (verificar que existan)
+    const totalCoursesElement = document.getElementById('totalCourses');
+    const totalProgressElement = document.getElementById('totalProgress');
+    const totalHoursElement = document.getElementById('totalHours');
     
-    // Actualizar progreso general
-    document.getElementById('overallProgress').textContent = `${totalProgress}%`;
-    document.getElementById('overallProgressBar').style.width = `${totalProgress}%`;
-    document.getElementById('completedCourses').textContent = completedCourses;
-    document.getElementById('inProgressCourses').textContent = inProgressCourses;
-    document.getElementById('completedHours').textContent = `${Math.round(totalProgress * 0.8)}h`;
+    if (totalCoursesElement) totalCoursesElement.textContent = totalCourses;
+    if (totalProgressElement) totalProgressElement.textContent = `${totalProgress}%`;
+    if (totalHoursElement) totalHoursElement.textContent = `${courses.reduce((sum, c) => sum + parseInt(c.duration), 0)}h`;
+    
+    // Actualizar progreso general (verificar que existan)
+    const overallProgressElement = document.getElementById('overallProgress');
+    const overallProgressBarElement = document.getElementById('overallProgressBar');
+    const completedCoursesElement = document.getElementById('completedCourses');
+    const inProgressCoursesElement = document.getElementById('inProgressCourses');
+    const completedHoursElement = document.getElementById('completedHours');
+    
+    if (overallProgressElement) overallProgressElement.textContent = `${totalProgress}%`;
+    if (overallProgressBarElement) overallProgressBarElement.style.width = `${totalProgress}%`;
+    if (completedCoursesElement) completedCoursesElement.textContent = completedCourses;
+    if (inProgressCoursesElement) inProgressCoursesElement.textContent = inProgressCourses;
+    if (completedHoursElement) completedHoursElement.textContent = `${Math.round(totalProgress * 0.8)}h`;
 }
 
 // ==================== //

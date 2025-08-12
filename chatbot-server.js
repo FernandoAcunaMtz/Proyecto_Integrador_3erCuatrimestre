@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = 5503; // Puerto diferente para evitar conflictos
+const PORT = 5502; // Cambiado a 5502 para evitar conflictos con el servidor principal en 5501
 
 // Middleware
 app.use(cors());
